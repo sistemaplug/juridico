@@ -2,22 +2,29 @@ import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 
-Decimal.prototype.toJSON = function () {
+// Garante que valores Decimal sejam convertidos para número no JSON
+(Decimal.prototype as any).toJSON = function () {
   return this.toNumber();
-};
-
-// Extensão de tipo que adiciona o método $use (reconhecido pelo TS)
-type ExtendedPrismaClient = PrismaClient & {
-  $use: (middleware: any) => void;
 };
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
+  constructor() {
+    // Chama o super() para inicializar corretamente o PrismaClient
+    super({
+      log: ['error', 'warn'], // opcional: exibe logs úteis
+    });
+  }
+
   async onModuleInit() {
     await this.$connect();
 
-    // Conversão segura com unknown
-    (this as unknown as ExtendedPrismaClient).$use(this.dateTimeMiddleware);
+    // Verifica se o método $use realmente existe antes de aplicar
+    if (typeof (this as any).$use === 'function') {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore - o typegen do Prisma às vezes não expõe $use
+      this.$use(this.dateTimeMiddleware);
+    }
   }
 
   async enableShutdownHooks(app: INestApplication) {
@@ -27,22 +34,19 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
   }
 
   /**
-   * Middleware para converter Date em ISOString automaticamente
+   * Middleware que converte campos Date em ISOString automaticamente
    */
-  private dateTimeMiddleware = async (
-    params: any,
-    next: (params: any) => Promise<any>,
-  ) => {
+  private readonly dateTimeMiddleware = async (params: any, next: any) => {
     const result = await next(params);
 
     const formatDateTime = (obj: any) => {
       if (!obj || typeof obj !== 'object') return;
 
-      for (const key in obj) {
+      for (const key of Object.keys(obj)) {
         const value = obj[key];
         if (value instanceof Date) {
           obj[key] = value.toISOString();
-        } else if (typeof value === 'object' && value !== null) {
+        } else if (typeof value === 'object') {
           formatDateTime(value);
         }
       }

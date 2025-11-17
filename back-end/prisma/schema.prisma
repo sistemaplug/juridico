@@ -1,0 +1,165 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @default(uuid()) @db.Char(36)
+  name       String
+  email      String   @unique
+  password   String
+  role       Role
+  avatar_url String?
+  is_active  Boolean  @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+  tokens     Token[]
+
+  @@map("users")
+}
+
+model Token {
+  id           String   @id @default(uuid()) @db.Char(36)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @default(now()) @updatedAt
+  access_token String
+  is_revoked   Boolean  @default(false)
+  user         User     @relation(fields: [user_id], references: [id])
+  user_id      String   @db.Char(36)
+  type         String   @default("login")
+
+  @@map("tokens")
+}
+
+model Contractor {
+  id               String     @id @default(uuid()) @db.Char(36)
+  name             String
+  cpf              String?
+  cnpj             String?
+  email            String
+  phone_commercial String
+  phone_personal   String
+  is_active        Boolean    @default(true)
+  created_at       DateTime   @default(now())
+  updated_at       DateTime   @default(now()) @updatedAt
+  contracts        Contract[]
+  requirers        Requirer[]
+  services         Service[]
+
+  @@map("contractors")
+}
+
+model Contract {
+  id              String     @id @default(uuid()) @db.Char(36)
+  contractor      Contractor @relation(fields: [contractor_id], references: [id])
+  contractor_id   String     @db.Char(36)
+  contract_date   DateTime
+  contract_object String // Ex: "Processo de Outorga"
+  service_type    String // FM, AM, TV, etc.
+  channel         String
+  class           String
+  frequency       String
+  power           String
+  is_active       Boolean    @default(true)
+  address         Address    @relation(fields: [address_id], references: [id])
+  address_id      String     @db.Char(36)
+  created_at      DateTime   @default(now())
+  updated_at      DateTime   @default(now()) @updatedAt
+
+  @@map("contracts")
+}
+
+model ProcessContact {
+  id               String   @id @default(uuid()) @db.Char(36)
+  name             String
+  cpf              String?
+  cnpj             String?
+  email            String
+  phone_commercial String
+  phone_personal   String
+  is_active        Boolean  @default(true)
+  address          Address? @relation(fields: [address_id], references: [id])
+  address_id       String?  @db.Char(36)
+  created_at       DateTime @default(now())
+  updated_at       DateTime @default(now()) @updatedAt
+
+  @@map("process_contact")
+}
+
+model Requirer {
+  id               String     @id @default(uuid()) @db.Char(36)
+  name             String
+  cpf              String?
+  cnpj             String?
+  email            String
+  phone_commercial String
+  is_active        Boolean    @default(true)
+  contractor       Contractor @relation(fields: [contractor_id], references: [id])
+  contractor_id    String     @db.Char(36)
+  address          Address    @relation(fields: [address_id], references: [id])
+  address_id       String     @db.Char(36)
+  created_at       DateTime   @default(now())
+  updated_at       DateTime   @default(now()) @updatedAt
+
+  @@map("requirers")
+}
+
+model Address {
+  id              String           @id @default(uuid()) @db.Char(36)
+  zipcode         String
+  street          String
+  number          String
+  neighborhood    String
+  complement      String?
+  city            String
+  state           String
+  created_at      DateTime         @default(now())
+  updated_at      DateTime         @default(now()) @updatedAt
+  contracts       Contract[]
+  process_contact ProcessContact[]
+  requirers       Requirer[]
+
+  @@map("addresses")
+}
+
+model Service {
+  id            String        @id @default(uuid()) @db.Char(36)
+  type          String
+  status        StatusService
+  is_active     Boolean       @default(true)
+  contractor    Contractor    @relation(fields: [contractor_id], references: [id])
+  contractor_id String        @db.Char(36)
+  created_at    DateTime      @default(now())
+  updated_at    DateTime      @default(now()) @updatedAt
+  trello_links  TrelloLink[]
+
+  @@map("services")
+}
+
+model TrelloLink {
+  id         String   @id @default(uuid()) @db.Char(36)
+  url        String // link do card do Trello
+  service    Service  @relation(fields: [service_id], references: [id])
+  service_id String   @db.Char(36)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  @@map("trello_links")
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
+  SUPPORT
+}
+
+enum StatusService {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELED
+}

@@ -11,7 +11,6 @@ import * as crypto from 'crypto';
 @Injectable()
 export class EncryptIdentifierInterceptor implements NestInterceptor {
   private readonly algorithm = 'aes-256-cbc';
-
   private readonly passphrase = 'my_super_secret_key';
 
   private getKey(): Buffer {
@@ -31,9 +30,11 @@ export class EncryptIdentifierInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       map((data) => {
-        const encryptIdentifier = (obj: any): any => {
+        const sensitiveFields = ['cpf', 'cnpj'];
+
+        const encryptFields = (obj: any): any => {
           if (Array.isArray(obj)) {
-            return obj.map(encryptIdentifier);
+            return obj.map(encryptFields);
           }
 
           if (obj !== null && typeof obj === 'object') {
@@ -43,13 +44,13 @@ export class EncryptIdentifierInterceptor implements NestInterceptor {
               delete newObj.password;
             }
 
-            if ('identifier' in newObj && newObj.identifier) {
-              newObj.identifier = this.encrypt(newObj.identifier);
-            }
-
             Object.keys(newObj).forEach((key) => {
+              if (sensitiveFields.includes(key) && newObj[key]) {
+                newObj[key] = this.encrypt(newObj[key]);
+              }
+
               if (typeof newObj[key] === 'object') {
-                newObj[key] = encryptIdentifier(newObj[key]);
+                newObj[key] = encryptFields(newObj[key]);
               }
             });
 
@@ -59,7 +60,7 @@ export class EncryptIdentifierInterceptor implements NestInterceptor {
           return obj;
         };
 
-        return encryptIdentifier(data);
+        return encryptFields(data);
       }),
     );
   }

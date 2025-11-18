@@ -23,9 +23,9 @@ export class AuthService {
     private readonly password: PasswordService,
   ) {}
 
-  async login(email: string, password: string, recaptchaToken) {
+  async login(email: string, password: string,) {
     // Verifica o reCAPTCHA antes de tudo
-    await this.recaptchaService.verifyToken(recaptchaToken, 'login');
+    // await this.recaptchaService.verifyToken(recaptchaToken, 'login');
 
     // Procura o usuário
     const user = await this.prisma.user.findUnique({

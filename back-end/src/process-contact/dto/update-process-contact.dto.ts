@@ -1,6 +1,6 @@
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
-export class UpdateContractorDto {
+export class UpdateProcessContactDto {
   @IsOptional()
   @IsString()
   name?: string;
@@ -24,10 +24,6 @@ export class UpdateContractorDto {
   @IsOptional()
   @IsString()
   phone_personal?: string;
-
-  @IsOptional()
-  @IsBoolean()
-  is_active?: boolean;
 
   @IsOptional()
   @IsString()

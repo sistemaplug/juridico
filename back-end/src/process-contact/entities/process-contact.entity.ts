@@ -1,6 +1,6 @@
-import { Contractor } from '@prisma/client';
+import { ProcessContact } from '@prisma/client';
 
-export class ContractorEntity implements Contractor {
+export class ProcessContactEntity implements ProcessContact {
   id: string;
   name: string;
   cpf: string | null;

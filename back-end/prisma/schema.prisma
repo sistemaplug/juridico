@@ -36,19 +36,23 @@ model Token {
 }
 
 model Contractor {
-  id               String     @id @default(uuid()) @db.Char(36)
-  name             String
-  cpf              String?
-  cnpj             String?
-  email            String
-  phone_commercial String
-  phone_personal   String
-  is_active        Boolean    @default(true)
-  created_at       DateTime   @default(now())
-  updated_at       DateTime   @default(now()) @updatedAt
-  contracts        Contract[]
-  requirers        Requirer[]
-  services         Service[]
+  id                     String     @id @default(uuid()) @db.Char(36)
+  name                   String
+  cpf                    String?
+  cnpj                   String?
+  email                  String
+  phone_commercial       String
+  phone_personal         String
+  is_active              Boolean    @default(true)
+  commercial_address     Address    @relation("ContractorCommercialAddress", fields: [commercial_address_id], references: [id])
+  commercial_address_id  String     @db.Char(36)
+  residential_address    Address    @relation("ContractorResidentialAddress", fields: [residential_address_id], references: [id])
+  residential_address_id String     @db.Char(36)
+  created_at             DateTime   @default(now())
+  updated_at             DateTime   @default(now()) @updatedAt
+  contracts              Contract[]
+  requirers              Requirer[]
+  services               Service[]
 
   @@map("contractors")
 }
@@ -72,18 +76,20 @@ model Contract {
 }
 
 model ProcessContact {
-  id               String   @id @default(uuid()) @db.Char(36)
-  name             String
-  cpf              String?
-  cnpj             String?
-  email            String
-  phone_commercial String
-  phone_personal   String
-  is_active        Boolean  @default(true)
-  address          Address  @relation(fields: [address_id], references: [id])
-  address_id       String   @db.Char(36)
-  created_at       DateTime @default(now())
-  updated_at       DateTime @default(now()) @updatedAt
+  id                     String   @id @default(uuid()) @db.Char(36)
+  name                   String
+  cpf                    String?
+  cnpj                   String?
+  email                  String
+  phone_commercial       String
+  phone_personal         String
+  is_active              Boolean  @default(true)
+  commercial_address     Address  @relation("ProcessCommercialAddress", fields: [commercial_address_id], references: [id])
+  commercial_address_id  String   @db.Char(36)
+  residential_address    Address  @relation("ProcessResidentialAddress", fields: [residential_address_id], references: [id])
+  residential_address_id String   @db.Char(36)
+  created_at             DateTime @default(now())
+  updated_at             DateTime @default(now()) @updatedAt
 
   @@map("process_contact")
 }
@@ -107,18 +113,21 @@ model Requirer {
 }
 
 model Address {
-  id              String           @id @default(uuid()) @db.Char(36)
-  zipcode         String
-  street          String
-  number          String
-  neighborhood    String
-  complement      String?
-  city            String
-  state           String
-  created_at      DateTime         @default(now())
-  updated_at      DateTime         @default(now()) @updatedAt
-  process_contact ProcessContact[]
-  requirers       Requirer[]
+  id                      String           @id @default(uuid()) @db.Char(36)
+  zipcode                 String
+  street                  String
+  number                  String
+  neighborhood            String
+  complement              String?
+  city                    String
+  state                   String
+  created_at              DateTime         @default(now())
+  updated_at              DateTime         @default(now()) @updatedAt
+  contractors_commercial  Contractor[]     @relation("ContractorCommercialAddress")
+  contractors_residential Contractor[]     @relation("ContractorResidentialAddress")
+  process_commercial      ProcessContact[] @relation("ProcessCommercialAddress")
+  process_residential     ProcessContact[] @relation("ProcessResidentialAddress")
+  requirers               Requirer[]
 
   @@map("addresses")
 }

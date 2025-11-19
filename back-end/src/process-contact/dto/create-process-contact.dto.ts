@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class CreateContractorDto {
+export class CreateProcessContactDto {
   @IsNotEmpty()
   @IsString()
   name: string;

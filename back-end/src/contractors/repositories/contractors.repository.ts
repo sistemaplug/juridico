@@ -26,7 +26,13 @@ export class ContractorsRepository {
 
   async findAll(): Promise<ContractorEntity[]> {
     return await this.prisma.contractor.findMany({
-      include: { contracts: true, requirers: true, services: true },
+      include: {
+        commercial_address: true,
+        residential_address: true,
+        contracts: true,
+        requirers: true,
+        services: true,
+      },
       orderBy: { created_at: 'asc' },
     });
   }
@@ -34,7 +40,13 @@ export class ContractorsRepository {
   async findById(id: string): Promise<ContractorEntity> {
     const contractor = await this.prisma.contractor.findUnique({
       where: { id },
-      include: { contracts: true, requirers: true, services: true },
+      include: {
+        commercial_address: true,
+        residential_address: true,
+        contracts: true,
+        requirers: true,
+        services: true,
+      },
     });
 
     if (!contractor) {
@@ -55,7 +67,13 @@ export class ContractorsRepository {
     return await this.prisma.contractor.update({
       where: { id },
       data: encryptedDto,
-      include: { contracts: true, requirers: true, services: true },
+      include: {
+        commercial_address: true,
+        residential_address: true,
+        contracts: true,
+        requirers: true,
+        services: true,
+      },
     });
   }
 

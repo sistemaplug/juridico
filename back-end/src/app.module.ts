@@ -11,6 +11,8 @@ import { ProcessContactModule } from './process-contact/process-contact.module';
 import { CepModule } from './cep/cep.module';
 import { AddressesModule } from './addresses/addresses.module';
 import { RequirersModule } from './requirers/requirers.module';
+import { ServicesContractorsModule } from './services-contractors/services-contractors.module';
+
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { RequirersModule } from './requirers/requirers.module';
     CepModule,
     AddressesModule,
     RequirersModule,
+    ServicesContractorsModule,
+    
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

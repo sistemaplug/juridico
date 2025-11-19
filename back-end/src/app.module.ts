@@ -10,6 +10,7 @@ import { ContractsModule } from './contracts/contracts.module';
 import { ProcessContactModule } from './process-contact/process-contact.module';
 import { CepModule } from './cep/cep.module';
 import { AddressesModule } from './addresses/addresses.module';
+import { RequirersModule } from './requirers/requirers.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AddressesModule } from './addresses/addresses.module';
     ProcessContactModule,
     CepModule,
     AddressesModule,
+    RequirersModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

@@ -23,8 +23,8 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
-    const { email, password,  } = loginDto;
-    return this.service.login(email, password, );
+    const { email, password, recaptchaToken } = loginDto;
+    return this.service.login(email, password, recaptchaToken);
   }
 
   @Post('block-email')

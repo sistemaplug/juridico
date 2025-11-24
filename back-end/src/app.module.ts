@@ -12,6 +12,7 @@ import { CepModule } from './cep/cep.module';
 import { AddressesModule } from './addresses/addresses.module';
 import { RequirersModule } from './requirers/requirers.module';
 import { ServicesContractorsModule } from './services-contractors/services-contractors.module';
+import { TrelloLinksModule } from './trello-links/trello-links.module';
 
 
 @Module({
@@ -26,6 +27,7 @@ import { ServicesContractorsModule } from './services-contractors/services-contr
     AddressesModule,
     RequirersModule,
     ServicesContractorsModule,
+    TrelloLinksModule,
     
   ],
   controllers: [AppController],

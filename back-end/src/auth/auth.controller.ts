@@ -23,6 +23,7 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
+
     const { email, password, recaptchaToken } = loginDto;
     return this.service.login(email, password, recaptchaToken);
   }

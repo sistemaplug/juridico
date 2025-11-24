@@ -26,7 +26,7 @@ model Token {
   id           String   @id @default(uuid()) @db.Char(36)
   created_at   DateTime @default(now())
   updated_at   DateTime @default(now()) @updatedAt
-  access_token String
+  access_token String   @db.Text
   is_revoked   Boolean  @default(false)
   user         User     @relation(fields: [user_id], references: [id])
   user_id      String   @db.Char(36)

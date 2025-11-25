@@ -11,8 +11,9 @@
         <strong> | {{ pageName }} </strong>
       </v-toolbar-title>
 
-      <v-spacer></v-spacer>
+      <v-spacer />
 
+      <!-- MENU DO USUÁRIO (avatar) -->
       <v-menu
         offset-y
         v-model="expand"
@@ -48,9 +49,9 @@
             </v-avatar>
 
             <div class="d-flex flex-column overflow-hidden">
-              <span class="font-weight-medium text-body-1">{{
-                authStore.user.name
-              }}</span>
+              <span class="font-weight-medium text-body-1">
+                {{ authStore.user.name }}
+              </span>
               <span class="email-title text-caption text-grey-darken-1">
                 {{ authStore.user.email }}
               </span>
@@ -63,17 +64,18 @@
             <v-list-item link @click="viewProfile">
               <div style="display: flex; gap: 10px">
                 <v-icon size="25" color="primary">mdi-cog-outline</v-icon>
-                <v-list-item-title style="font-weight: 500"
-                  >Meus dados</v-list-item-title
-                >
+                <v-list-item-title style="font-weight: 500">
+                  Meus dados
+                </v-list-item-title>
               </div>
             </v-list-item>
+
             <v-list-item link @click="logout">
               <div style="display: flex; gap: 10px">
                 <v-icon size="25" color="primary">mdi-exit-to-app</v-icon>
-                <v-list-item-title style="font-weight: 500"
-                  >Sair</v-list-item-title
-                >
+                <v-list-item-title style="font-weight: 500">
+                  Sair
+                </v-list-item-title>
               </div>
             </v-list-item>
           </v-list>
@@ -81,7 +83,7 @@
       </v-menu>
     </v-app-bar>
 
-    <!-- MENU LATERAL DINÂMICO -->
+    <!-- MENU LATERAL -->
     <v-navigation-drawer
       v-model="drawer"
       app
@@ -93,7 +95,7 @@
       <v-list>
         <v-list-item
           v-for="item in filteredSidebarItems"
-          :key="item.module"
+          :key="item.to"
           :to="{ path: item.to }"
           router
         >
@@ -121,98 +123,58 @@ const route = useRoute();
 
 const drawer = ref(false);
 const expand = ref(false);
-const pageName = ref("Página Inicial");
+const pageName = ref("Clientes");
 
-// Mesmos cards da Home
+// MENU LATERAL
 const cards = [
   {
-    label: "Educativa",
-    module: "educativa",
-    icon: "mdi-school",
-    to: "/educativa",
+    label: "Clientes",
+    icon: "mdi-account-group",
+    to: "/clientes",
   },
-  {
-    label: "Engenharia",
-    module: "engenharia",
-    icon: "mdi-hammer-wrench",
-    to: "/engenharia",
-  },
-  {
-    label: "Jurídico",
-    module: "juridico",
-    icon: "mdi-scale-balance",
-    to: "/juridico",
-  },
-  {
-    label: "Manual de Procedimento",
-    module: "manual-procedimento",
-    icon: "mdi-book-open-variant",
-    to: "/manual-procedimento",
-  },
-  { label: "Radcom", module: "radcom", icon: "mdi-radio-tower", to: "/radcom" },
-  {
-    label: "Rcial",
-    module: "rcial",
-    icon: "mdi-briefcase-outline",
-    to: "/rcial",
-  },
-  { label: "RTV", module: "rtv", icon: "mdi-television-classic", to: "/rtv" },
   {
     label: "Usuários",
-    module: "usuarios",
     icon: "mdi-account-cog",
     to: "/usuarios",
+    adminOnly: true,
   },
 ];
 
-// Mesma lógica da Home
 const filteredSidebarItems = computed(() => {
   const user = authStore.user;
   if (!user) return [];
 
-  const role = user.role;
+  if (user.role === "ADMIN") return cards;
 
-  if (role === "ADMIN") return cards;
-
-  if (role === "SUPPORT") {
-    return cards.filter((c) => c.module !== "usuarios");
-  }
-
-  if (role === "CUSTOMER") {
-    return cards.filter((c) => c.module !== "usuarios");
-  }
-
-  return [];
+  return cards.filter((c) => !c.adminOnly);
 });
 
-const toggleDrawer = () => {
-  drawer.value = !drawer.value;
-};
+// EVENTOS
+const toggleDrawer = () => (drawer.value = !drawer.value);
 
 const logout = async () => {
-  try {
-    await authStore.logout();
-    router.push("/login");
-  } catch (error) {
-    console.error("Erro ao deslogar:", error);
-  }
+  await authStore.logout();
+  router.push("/login");
 };
 
-const viewProfile = () => {
-  router.push("/meus-dados");
-};
+const viewProfile = () => router.push("/meus-dados");
 
+// CONTROLE DO TÍTULO
 watch(
   () => route.fullPath,
   (path) => {
     switch (path) {
-      case "/pagina-inicial":
-        document.title = "Página Inicial";
-        pageName.value = "Página Inicial";
+      case "/clientes":
+        document.title = "Clientes";
+        pageName.value = "Clientes";
         break;
       case "/meus-dados":
         document.title = "Meus Dados";
         pageName.value = "Meus Dados";
+        break;
+      case "/usuarios":
+        document.title = "Usuários";
+        pageName.value = "Usuários";
         break;
       default:
         document.title = "Página desconhecida";

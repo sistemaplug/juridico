@@ -1,3 +1,4 @@
+import { $Enums } from '@prisma/client';
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export class UpdateContractorDto {

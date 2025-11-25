@@ -149,7 +149,7 @@ async function submitUser() {
 
     // Se o usuário existir e estiver ativo → redireciona
     if (authStore.user && authStore.user.is_active) {
-      router.push("/pagina-inicial");
+      router.push("/clientes");
     }
   } catch (error) {
     console.error("Erro no login:", error);

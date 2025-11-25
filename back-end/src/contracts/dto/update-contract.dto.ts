@@ -3,8 +3,10 @@ import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export class UpdateContractDto {
   @IsOptional()
-  @IsString()
-  @Transform(({ value }) => new Date(value))
+  @Transform(({ value }) => {
+    if (value instanceof Date) return value;
+    return new Date(value);
+  })
   contract_date?: Date;
 
   @IsOptional()

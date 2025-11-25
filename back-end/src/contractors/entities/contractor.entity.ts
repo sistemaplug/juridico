@@ -1,4 +1,4 @@
-import { Contractor } from '@prisma/client';
+import { $Enums, Contractor } from '@prisma/client';
 
 export class ContractorEntity implements Contractor {
   id: string;

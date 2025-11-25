@@ -15,6 +15,10 @@ export class ContractsService {
     return await this.repostiroy.findAll();
   }
 
+  async findByContractor(contractorId: string) {
+    return await this.repostiroy.findByContractor(contractorId);
+  }
+
   async findById(id: string) {
     return await this.repostiroy.findById(id);
   }

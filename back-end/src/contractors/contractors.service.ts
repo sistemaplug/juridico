@@ -15,8 +15,16 @@ export class ContractorsService {
     return await this.repository.findAll();
   }
 
+  async findAllActive() {
+    return await this.repository.findAllActive();
+  }
+
+  async findAllInactive() {
+    return await this.repository.findAllInactive();
+  }
+
   async findById(id: string) {
-    return await this.findById(id);
+    return await this.repository.findById(id);
   }
 
   async update(id: string, dto: UpdateContractorDto) {

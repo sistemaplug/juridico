@@ -27,6 +27,16 @@ export class ContractorsController {
     return await this.service.findAll();
   }
 
+  @Get('active')
+  async findAllActive() {
+    return await this.service.findAllActive();
+  }
+
+  @Get('inactive')
+  async findAllInactive() {
+    return await this.service.findAllInactive();
+  }
+
   @Get(':id')
   async findById(@Param('id') id: string) {
     return await this.service.findById(id);

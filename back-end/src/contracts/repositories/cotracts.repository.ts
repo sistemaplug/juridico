@@ -16,6 +16,12 @@ export class ContractsRepository {
     return await this.prisma.contract.findMany();
   }
 
+  async findByContractor(contractorId: string) {
+    return await this.prisma.contract.findFirst({
+      where: { contractor_id: contractorId },
+    });
+  }
+
   async findById(id: string): Promise<ContractEntity> {
     const contract = await this.prisma.contract.findUnique({ where: { id } });
 

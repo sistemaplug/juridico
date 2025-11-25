@@ -27,6 +27,11 @@ export class ContractsController {
     return await this.service.findAll();
   }
 
+  @Get('by-contractor/:contractorId')
+  async findByContractor(@Param('contractorId') contractorId: string) {
+    return this.service.findByContractor(contractorId);
+  }
+
   @Get(':id')
   async findById(@Param('id') id: string) {
     return await this.service.findById(id);

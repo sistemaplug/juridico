@@ -8,9 +8,9 @@ import { jwtDecode } from "jwt-decode"; // instale com: npm i jwt-decode
 import { routes as autoRoutes } from "vue-router/auto-routes";
 import Login from "@/pages/forms/login/Login.vue";
 import { useAuthStore } from "@/stores/auth/User";
-import Home from "@/pages/home/Home.vue";
 import Index from "@/pages/forms/myData/Index.vue";
 import { useSnackbarStore } from "@/stores/snackbarStore";
+import ContractorHome from "@/pages/contractors/ContractorHome.vue";
 
 const manualRoutes: Array<RouteRecordRaw> = [
   {
@@ -23,17 +23,12 @@ const manualRoutes: Array<RouteRecordRaw> = [
     component: Index,
     meta: { title: "Meus Dados", auth: true },
   },
-  {
-    path: "/pagina-inicial",
-    component: Home,
-    meta: { title: "Página Inicial", auth: true },
-  },
 
-  // {
-  //   path: "/usuarios",
-  //   component: ListUser,
-  //   meta: { title: "Usuários", auth: true },
-  // },
+  {
+    path: "/clientes",
+    component: ContractorHome,
+    meta: { title: "Clientes", auth: true },
+  },
 ];
 
 const routes = setupLayouts([...autoRoutes, ...manualRoutes]);
@@ -97,7 +92,7 @@ router.beforeEach(async (to, from, next) => {
 
   // Se estiver logado e tentar acessar /login → redireciona à home
   if (token && isPublic) {
-    return next("/pagina-inicial");
+    return next("/clientes");
   }
 
   // Carregar perfil do usuário, se ainda não tiver sido carregado

@@ -11,6 +11,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ContractorActiveAndInative: typeof import('./components/contractors/ContractorActiveAndInative.vue')['default']
+    ContractorSearch: typeof import('./components/contractors/ContractorSearch.vue')['default']
     Header: typeof import('./components/header/Header.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

@@ -18,6 +18,16 @@ export class ContractorsRepository {
     return dto;
   }
 
+  private decryptSensitiveFields(contractor: any) {
+    if (contractor?.cpf) {
+      contractor.cpf = this.encryption.decrypt(contractor.cpf);
+    }
+    if (contractor?.cnpj) {
+      contractor.cnpj = this.encryption.decrypt(contractor.cnpj);
+    }
+    return contractor;
+  }
+
   async create(dto: CreateContractorDto): Promise<ContractorEntity> {
     const encryptedDto = this.encryptSensitiveFields(dto);
 
@@ -25,7 +35,7 @@ export class ContractorsRepository {
   }
 
   async findAll(): Promise<ContractorEntity[]> {
-    return await this.prisma.contractor.findMany({
+    const list = await this.prisma.contractor.findMany({
       include: {
         commercial_address: true,
         residential_address: true,
@@ -35,6 +45,40 @@ export class ContractorsRepository {
       },
       orderBy: { created_at: 'asc' },
     });
+
+    return list.map((c) => this.decryptSensitiveFields(c));
+  }
+
+  async findAllActive(): Promise<ContractorEntity[]> {
+    const list = await this.prisma.contractor.findMany({
+      where: { is_active: true },
+      include: {
+        commercial_address: true,
+        residential_address: true,
+        contracts: true,
+        requirers: true,
+        services: true,
+      },
+      orderBy: { created_at: 'asc' },
+    });
+
+    return list.map((c) => this.decryptSensitiveFields(c));
+  }
+
+  async findAllInactive(): Promise<ContractorEntity[]> {
+    const list = await this.prisma.contractor.findMany({
+      where: { is_active: false },
+      include: {
+        commercial_address: true,
+        residential_address: true,
+        contracts: true,
+        requirers: true,
+        services: true,
+      },
+      orderBy: { created_at: 'asc' },
+    });
+
+    return list.map((c) => this.decryptSensitiveFields(c));
   }
 
   async findById(id: string): Promise<ContractorEntity> {
@@ -53,7 +97,7 @@ export class ContractorsRepository {
       throw new HttpException('Conctractor not found', 404);
     }
 
-    return contractor;
+    return this.decryptSensitiveFields(contractor);
   }
 
   async update(

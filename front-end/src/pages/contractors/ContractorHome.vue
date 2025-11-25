@@ -86,9 +86,16 @@
     <!-- MODAL CONTRATO -->
     <v-dialog v-model="showModalDetailsContract" max-width="1200">
       <ContractDetails
-        v-if="selectedContract"
         :contract="selectedContract"
         @close="showModalDetailsContract = false"
+      />
+    </v-dialog>
+
+    <!-- MODAL PROCESSO DE CONTATO -->
+    <v-dialog v-model="showModalDetailsProcessContact" max-width="1200">
+      <ProcessContactDetails
+        :contact="selectedProcessContact"
+        @close="showModalDetailsProcessContact = false"
       />
     </v-dialog>
   </v-container>
@@ -104,15 +111,22 @@ import { formatCpf, formatCnpj, formatPhone } from "@/filters";
 import ContractDetails from "../contracts/ContractDetails.vue";
 import type { DataContractor } from "@/types/contractors/ContractorTypes";
 import type { DataContract } from "@/types/contracts/ContractTypes";
+import { useProcessContactStore } from "@/stores/process-contacts/ProcessContactStore";
+import type { DataProcessContact } from "@/types/process-contacts/ProcessContactTypes";
+import ProcessContactDetails from "../process-contacts/ProcessContactDetails.vue";
 
 const contractorStore = useContractorStore();
 const contractStore = useContractStore();
+const processContactStore = useProcessContactStore();
 
 const search = ref("");
 const status = ref(null);
 
 const showModalDetailsContract = ref(false);
+const showModalDetailsProcessContact = ref(false);
+
 const selectedContract = ref<DataContract | null>(null);
+const selectedProcessContact = ref<DataProcessContact | null>(null);
 
 onMounted(async () => {
   await contractorStore.findAll();
@@ -151,13 +165,22 @@ const actions = [
 async function handleActionClick(label: string, contractor: DataContractor) {
   if (label === "Contrato") {
     await openContract(contractor.id);
+  } else if (label === "Instrução Processo") {
+    await openProcessContact(contractor.id);
   }
 }
 
 async function openContract(contractorId: string) {
   const contract = await contractStore.findByContractor(contractorId);
-
   selectedContract.value = contract;
   showModalDetailsContract.value = true;
+}
+
+async function openProcessContact(contractorId: string) {
+  const processContact = await processContactStore.findByContractor(
+    contractorId
+  );
+  selectedProcessContact.value = processContact;
+  showModalDetailsProcessContact.value = true;
 }
 </script>

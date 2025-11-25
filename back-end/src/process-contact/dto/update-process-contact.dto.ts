@@ -27,6 +27,10 @@ export class UpdateProcessContactDto {
 
   @IsOptional()
   @IsString()
+  contractor_id?: string;
+
+  @IsOptional()
+  @IsString()
   commercial_address_id?: string;
 
   @IsOptional()

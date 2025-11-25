@@ -15,6 +15,10 @@ export class ProcessContactService {
     return await this.repository.findAll();
   }
 
+  async findByContractor(contractorId: string) {
+    return await this.repository.findByContractor(contractorId);
+  }
+
   async findById(id) {
     return await this.repository.findById(id);
   }

@@ -21,6 +21,16 @@ export class ProcessContactRepository {
     });
   }
 
+  async findByContractor(contractorId: string) {
+    return await this.prisma.processContact.findFirst({
+      where: { contractor_id: contractorId },
+      include: {
+        commercial_address: true,
+        residential_address: true,
+      },
+    });
+  }
+
   async findById(id: string): Promise<ProcessContactEntity> {
     const processContact = await this.prisma.processContact.findUnique({
       where: { id },

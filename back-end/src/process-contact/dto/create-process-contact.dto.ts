@@ -27,6 +27,10 @@ export class CreateProcessContactDto {
 
   @IsNotEmpty()
   @IsString()
+  contractor_id: string;
+
+  @IsNotEmpty()
+  @IsString()
   commercial_address_id: string;
 
   @IsNotEmpty()

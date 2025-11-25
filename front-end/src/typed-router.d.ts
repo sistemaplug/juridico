@@ -27,6 +27,9 @@ declare module 'vue-router/auto-routes' {
     '/forms/myData/FormMyInfo': RouteRecordInfo<'/forms/myData/FormMyInfo', '/forms/myData/FormMyInfo', Record<never, never>, Record<never, never>>,
     '/forms/myData/FormMyPassword': RouteRecordInfo<'/forms/myData/FormMyPassword', '/forms/myData/FormMyPassword', Record<never, never>, Record<never, never>>,
     '/forms/myData/Index': RouteRecordInfo<'/forms/myData/Index', '/forms/myData/Index', Record<never, never>, Record<never, never>>,
+    '/process-contacts/EditProcessContact': RouteRecordInfo<'/process-contacts/EditProcessContact', '/process-contacts/EditProcessContact', Record<never, never>, Record<never, never>>,
+    '/process-contacts/ProcessContactDetails': RouteRecordInfo<'/process-contacts/ProcessContactDetails', '/process-contacts/ProcessContactDetails', Record<never, never>, Record<never, never>>,
+    '/process-contacts/ProcessContactDetailsReadonly': RouteRecordInfo<'/process-contacts/ProcessContactDetailsReadonly', '/process-contacts/ProcessContactDetailsReadonly', Record<never, never>, Record<never, never>>,
   }
 
   /**
@@ -74,6 +77,18 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/forms/myData/Index.vue': {
       routes: '/forms/myData/Index'
+      views: never
+    }
+    'src/pages/process-contacts/EditProcessContact.vue': {
+      routes: '/process-contacts/EditProcessContact'
+      views: never
+    }
+    'src/pages/process-contacts/ProcessContactDetails.vue': {
+      routes: '/process-contacts/ProcessContactDetails'
+      views: never
+    }
+    'src/pages/process-contacts/ProcessContactDetailsReadonly.vue': {
+      routes: '/process-contacts/ProcessContactDetailsReadonly'
       views: never
     }
   }

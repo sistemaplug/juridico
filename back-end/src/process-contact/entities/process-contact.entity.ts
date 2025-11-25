@@ -9,6 +9,7 @@ export class ProcessContactEntity implements ProcessContact {
   phone_commercial: string;
   phone_personal: string;
   is_active: boolean;
+  contractor_id: string;
   commercial_address_id: string;
   residential_address_id: string;
   created_at: Date;

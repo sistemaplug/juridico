@@ -36,23 +36,24 @@ model Token {
 }
 
 model Contractor {
-  id                     String     @id @default(uuid()) @db.Char(36)
+  id                     String           @id @default(uuid()) @db.Char(36)
   name                   String
   cpf                    String?
   cnpj                   String?
   email                  String
   phone_commercial       String
   phone_personal         String
-  is_active              Boolean    @default(true)
-  commercial_address     Address    @relation("ContractorCommercialAddress", fields: [commercial_address_id], references: [id])
-  commercial_address_id  String     @db.Char(36)
-  residential_address    Address    @relation("ContractorResidentialAddress", fields: [residential_address_id], references: [id])
-  residential_address_id String     @db.Char(36)
-  created_at             DateTime   @default(now())
-  updated_at             DateTime   @default(now()) @updatedAt
+  is_active              Boolean          @default(true)
+  commercial_address     Address          @relation("ContractorCommercialAddress", fields: [commercial_address_id], references: [id])
+  commercial_address_id  String           @db.Char(36)
+  residential_address    Address          @relation("ContractorResidentialAddress", fields: [residential_address_id], references: [id])
+  residential_address_id String           @db.Char(36)
+  created_at             DateTime         @default(now())
+  updated_at             DateTime         @default(now()) @updatedAt
   contracts              Contract[]
   requirers              Requirer[]
   services               Service[]
+  process_contacts       ProcessContact[]
 
   @@map("contractors")
 }
@@ -76,22 +77,24 @@ model Contract {
 }
 
 model ProcessContact {
-  id                     String   @id @default(uuid()) @db.Char(36)
+  id                     String     @id @default(uuid()) @db.Char(36)
   name                   String
   cpf                    String?
   cnpj                   String?
   email                  String
   phone_commercial       String
   phone_personal         String
-  is_active              Boolean  @default(true)
-  commercial_address     Address  @relation("ProcessCommercialAddress", fields: [commercial_address_id], references: [id])
-  commercial_address_id  String   @db.Char(36)
-  residential_address    Address  @relation("ProcessResidentialAddress", fields: [residential_address_id], references: [id])
-  residential_address_id String   @db.Char(36)
-  created_at             DateTime @default(now())
-  updated_at             DateTime @default(now()) @updatedAt
+  is_active              Boolean    @default(true)
+  contractor             Contractor @relation(fields: [contractor_id], references: [id])
+  contractor_id          String     @db.Char(36)
+  commercial_address     Address    @relation("ProcessCommercialAddress", fields: [commercial_address_id], references: [id])
+  commercial_address_id  String     @db.Char(36)
+  residential_address    Address    @relation("ProcessResidentialAddress", fields: [residential_address_id], references: [id])
+  residential_address_id String     @db.Char(36)
+  created_at             DateTime   @default(now())
+  updated_at             DateTime   @default(now()) @updatedAt
 
-  @@map("process_contact")
+  @@map("process_contacts")
 }
 
 model Requirer {

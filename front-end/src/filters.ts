@@ -321,6 +321,23 @@ export function normalizeTimeInput(value: string): string {
   return `${hh}${m}`;
 }
 
+// CEP: 65530000 → 65530-000
+export function formatZipcode(value: string): string {
+  if (!value) return "";
+  return value.replace(/^(\d{5})(\d{3})$/, "$1-$2");
+}
+
+// Endereço completo
+export function formatAddress(address: any): string {
+  if (!address) return "—";
+
+  const street = address.street ?? "";
+  const number = address.number ?? "";
+  const neighborhood = address.neighborhood ?? "";
+
+  return `${street}, nº ${number} | ${neighborhood}`;
+}
+
 // Plugin para registrar os filtros globais no app Vue
 export function registerFilters(app: App): void {
   app.config.globalProperties.$filters = {
@@ -343,5 +360,7 @@ export function registerFilters(app: App): void {
     parseTime: parseTime,
     formatTimeDisplay: formatTimeDisplay,
     normalizeTimeInput: normalizeTimeInput,
+    formatZipcode: formatZipcode,
+    formatAddress: formatAddress,
   };
 }

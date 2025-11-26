@@ -30,6 +30,9 @@ declare module 'vue-router/auto-routes' {
     '/process-contacts/EditProcessContact': RouteRecordInfo<'/process-contacts/EditProcessContact', '/process-contacts/EditProcessContact', Record<never, never>, Record<never, never>>,
     '/process-contacts/ProcessContactDetails': RouteRecordInfo<'/process-contacts/ProcessContactDetails', '/process-contacts/ProcessContactDetails', Record<never, never>, Record<never, never>>,
     '/process-contacts/ProcessContactDetailsReadonly': RouteRecordInfo<'/process-contacts/ProcessContactDetailsReadonly', '/process-contacts/ProcessContactDetailsReadonly', Record<never, never>, Record<never, never>>,
+    '/requirers/EditRequirer': RouteRecordInfo<'/requirers/EditRequirer', '/requirers/EditRequirer', Record<never, never>, Record<never, never>>,
+    '/requirers/RequirerDetails': RouteRecordInfo<'/requirers/RequirerDetails', '/requirers/RequirerDetails', Record<never, never>, Record<never, never>>,
+    '/requirers/RequirerDetailsReadonly': RouteRecordInfo<'/requirers/RequirerDetailsReadonly', '/requirers/RequirerDetailsReadonly', Record<never, never>, Record<never, never>>,
   }
 
   /**
@@ -89,6 +92,18 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/process-contacts/ProcessContactDetailsReadonly.vue': {
       routes: '/process-contacts/ProcessContactDetailsReadonly'
+      views: never
+    }
+    'src/pages/requirers/EditRequirer.vue': {
+      routes: '/requirers/EditRequirer'
+      views: never
+    }
+    'src/pages/requirers/RequirerDetails.vue': {
+      routes: '/requirers/RequirerDetails'
+      views: never
+    }
+    'src/pages/requirers/RequirerDetailsReadonly.vue': {
+      routes: '/requirers/RequirerDetailsReadonly'
       views: never
     }
   }

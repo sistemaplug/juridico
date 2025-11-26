@@ -19,6 +19,13 @@ export class RequirersRepository {
     });
   }
 
+  async findByContractor(contractorId: string) {
+    return await this.prisma.requirer.findFirst({
+      where: { contractor_id: contractorId },
+      include: { address: true },
+    });
+  }
+
   async findById(id: string): Promise<RequirerEntity> {
     const requirer = await this.prisma.requirer.findUnique({
       where: { id },

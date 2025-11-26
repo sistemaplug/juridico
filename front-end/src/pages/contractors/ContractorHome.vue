@@ -98,6 +98,14 @@
         @close="showModalDetailsProcessContact = false"
       />
     </v-dialog>
+
+    <!-- MODAL REQUERENTE -->
+    <v-dialog v-model="showModalDetailsRequirer" max-width="1200">
+      <RequirerDetails
+        :requirer="selectedRequirer"
+        @close="showModalDetailsRequirer = false"
+      />
+    </v-dialog>
   </v-container>
 </template>
 
@@ -114,19 +122,25 @@ import type { DataContract } from "@/types/contracts/ContractTypes";
 import { useProcessContactStore } from "@/stores/process-contacts/ProcessContactStore";
 import type { DataProcessContact } from "@/types/process-contacts/ProcessContactTypes";
 import ProcessContactDetails from "../process-contacts/ProcessContactDetails.vue";
+import RequirerDetails from "../requirers/RequirerDetails.vue";
+import type { DataRequirer } from "@/types/requirers/RequirerTypes";
+import { useRequirerStore } from "@/stores/requirers/RequirerStore";
 
 const contractorStore = useContractorStore();
 const contractStore = useContractStore();
 const processContactStore = useProcessContactStore();
+const requirerStore = useRequirerStore();
 
 const search = ref("");
 const status = ref(null);
 
 const showModalDetailsContract = ref(false);
 const showModalDetailsProcessContact = ref(false);
+const showModalDetailsRequirer = ref(false);
 
 const selectedContract = ref<DataContract | null>(null);
 const selectedProcessContact = ref<DataProcessContact | null>(null);
+const selectedRequirer = ref<DataRequirer | null>(null);
 
 onMounted(async () => {
   await contractorStore.findAll();
@@ -167,6 +181,8 @@ async function handleActionClick(label: string, contractor: DataContractor) {
     await openContract(contractor.id);
   } else if (label === "Instrução Processo") {
     await openProcessContact(contractor.id);
+  } else if (label === "Requerente") {
+    await openRequirer(contractor.id);
   }
 }
 
@@ -182,5 +198,11 @@ async function openProcessContact(contractorId: string) {
   );
   selectedProcessContact.value = processContact;
   showModalDetailsProcessContact.value = true;
+}
+
+async function openRequirer(contractorId: string) {
+  const requirer = await requirerStore.findByContractor(contractorId);
+  selectedRequirer.value = requirer;
+  showModalDetailsRequirer.value = true;
 }
 </script>

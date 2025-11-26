@@ -1,5 +1,5 @@
 <template>
-  <v-row class="pt-6">
+  <v-row>
     <v-col>
       <v-text-field
         :model-value="formattedDate"
@@ -76,7 +76,7 @@
     </v-col>
   </v-row>
 
-  
+
 </template>
 
 <script setup lang="ts">

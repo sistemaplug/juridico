@@ -4,6 +4,7 @@ import { ContractorService } from "../contractors/ContractorService";
 import { ContractService } from "../contracts/ContractService";
 import { PasswordService } from "../PasswordService";
 import { ProcessContactService } from "../process-contacts/ProcessContactService";
+import { RequiererService } from "../requirers/RequiererService";
 import UploadService from "../UploadService";
 
 export class API {
@@ -14,4 +15,5 @@ export class API {
   static contractService = new ContractService();
   static processContactService = new ProcessContactService();
   static addressService = new AddressService();
+  static requirerService = new RequiererService();
 }

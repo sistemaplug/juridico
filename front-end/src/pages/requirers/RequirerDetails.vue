@@ -1,7 +1,7 @@
 <template>
   <v-card class="pa-5">
     <div class="d-flex justify-space-between align-center mb-4">
-      <v-card-title>Detalhes do Contato | Instrução do Processo</v-card-title>
+      <v-card-title>Detalhes do Requerente</v-card-title>
       <v-icon class="cursor-pointer" @click="$emit('close')">mdi-close</v-icon>
     </div>
 
@@ -9,30 +9,30 @@
 
     <!-- NENHUM CONTATO -->
     <v-alert
-      v-if="!contact"
+      v-if="!requirer"
       type="info"
-      text="Nenhum contato cadastrado para este cliente!"
+      text="Nenhum requerente cadastrado para este cliente!"
       variant="tonal"
       class="mt-4"
     />
 
     <!-- MODO VISUALIZAÇÃO -->
-    <ProcessContactDetailsReadonly
-      v-if="contact && !isEditing"
-      :contact="contact"
+    <RequirerDetailsReadonly
+      v-if="requirer && !isEditing"
+      :requirer="requirer"
       @edit="isEditing = true"
       @close="emit('close')"
     />
 
     <!--  MODO EDIÇÃO -->
-    <EditProcessContact
-      v-if="contact && isEditing"
-      :contact="contact"
+    <EditRequirer
+      v-if="requirer && isEditing"
+      :requirer="requirer"
       @close="emit('close')"
     />
 
     <!-- BOTÃO EDITAR -->
-    <div class="d-flex justify-end pt-6" v-if="contact && !isEditing">
+    <div class="d-flex justify-end pt-6" v-if="requirer && !isEditing">
       <v-btn color="primary" @click="isEditing = true">
         <v-icon start>mdi-pencil</v-icon>
         Editar Registro
@@ -43,23 +43,22 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import type { DataProcessContact } from "@/types/process-contacts/ProcessContactTypes";
-
-import ProcessContactDetailsReadonly from "./ProcessContactDetailsReadonly.vue";
-import EditProcessContact from "./EditProcessContact.vue";
+import type { DataRequirer } from "@/types/requirers/RequirerTypes";
+import RequirerDetailsReadonly from "./RequirerDetailsReadonly.vue";
+import EditRequirer from "./EditRequirer.vue";
 
 const emit = defineEmits(["close"]);
 
-// recebe "contact" (como o Contract usa "contract")
+// recebe "requirer" (como o Contract usa "requirer")
 const props = defineProps<{
-  contact: DataProcessContact | null;
+  requirer: DataRequirer | null;
 }>();
 
 // estado de edição
 const isEditing = ref(false);
 
 // cópia local dos dados
-const contact = ref<DataProcessContact | null>(
-  props.contact ? { ...props.contact } : null
+const requirer = ref<DataRequirer | null>(
+  props.requirer ? { ...props.requirer } : null
 );
 </script>

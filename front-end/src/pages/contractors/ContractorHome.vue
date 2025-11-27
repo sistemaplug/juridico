@@ -24,23 +24,35 @@
           <div class="d-flex justify-space-between align-center mb-3">
             <div class="d-flex flex-column ga-1">
               <h3 class="text-h6 font-weight-bold ma-0">
-                {{ contractor.name }}
+                {{ contractor.person.name }}
               </h3>
 
               <div class="d-flex flex-column pt-6">
                 <div class="d-flex flex-column ga-4">
                   <span class="text-grey-darken-1">
                     <b>CNPJ:</b>
-                    {{ formatCnpj(contractor.cnpj) || "Não possui" }}
+                    {{
+                      contractor.person.cnpj
+                        ? formatCnpj(contractor.person.cnpj)
+                        : "Não possui"
+                    }}
                   </span>
                   <span class="text-grey-darken-1">
-                    <b>CPF:</b> {{ formatCpf(contractor.cpf) || "Não possui" }}
+                    <b>CPF:</b>
+                    {{
+                      contractor.person.cpf
+                        ? formatCpf(contractor.person.cpf)
+                        : "Não possui"
+                    }}
                   </span>
                 </div>
               </div>
             </div>
 
-            <v-icon :color="contractor.is_active ? 'green' : 'red'" size="18">
+            <v-icon
+              :color="contractor.person.is_active ? 'green' : 'red'"
+              size="18"
+            >
               mdi-circle
             </v-icon>
           </div>
@@ -50,12 +62,16 @@
           <div class="d-flex flex-column mt-3 ga-4 pt-2 pb-2">
             <div class="d-flex align-center ga-2 mb-2">
               <v-icon size="20">mdi-phone</v-icon>
-              <span>{{ formatPhone(contractor.phone_commercial) }}</span>
+              {{
+                contractor.person.phone_commercial
+                  ? formatPhone(contractor.person.phone_commercial)
+                  : "Não possui"
+              }}
             </div>
 
             <div class="d-flex align-center ga-2 mb-2">
               <v-icon size="20">mdi-email-outline</v-icon>
-              <span>{{ contractor.email }}</span>
+              <span>{{ contractor.person.email }}</span>
             </div>
           </div>
 
@@ -92,10 +108,11 @@
     </v-dialog>
 
     <!-- MODAL PROCESSO DE CONTATO -->
-    <v-dialog v-model="showModalDetailsProcessContact" max-width="1200">
-      <ProcessContactDetails
-        :contact="selectedProcessContact"
-        @close="showModalDetailsProcessContact = false"
+    <v-dialog v-model="showModalDetailsProcessContactPerson" max-width="1200">
+      <ProcessContactPersonDetails
+        v-if="selectedProcessContactPerson"
+        :contact="selectedProcessContactPerson ?? null"
+        @close="showModalDetailsProcessContactPerson = false"
       />
     </v-dialog>
 
@@ -119,27 +136,27 @@ import { formatCpf, formatCnpj, formatPhone } from "@/filters";
 import ContractDetails from "../contracts/ContractDetails.vue";
 import type { DataContractor } from "@/types/contractors/ContractorTypes";
 import type { DataContract } from "@/types/contracts/ContractTypes";
-import { useProcessContactStore } from "@/stores/process-contacts/ProcessContactStore";
-import type { DataProcessContact } from "@/types/process-contacts/ProcessContactTypes";
-import ProcessContactDetails from "../process-contacts/ProcessContactDetails.vue";
+import { useProcessContactPersonStore } from "@/stores/process-contacts/ProcessContactPersonStore";
+import type { DataProcessContactPerson } from "@/types/process-contacts-person/ProcessContactPersonTypes";
+import ProcessContactPersonDetails from "../process-contacts-person/ProcessContactPersonDetails.vue";
 import RequirerDetails from "../requirers/RequirerDetails.vue";
 import type { DataRequirer } from "@/types/requirers/RequirerTypes";
 import { useRequirerStore } from "@/stores/requirers/RequirerStore";
 
 const contractorStore = useContractorStore();
 const contractStore = useContractStore();
-const processContactStore = useProcessContactStore();
+const processContactPersonStore = useProcessContactPersonStore();
 const requirerStore = useRequirerStore();
 
 const search = ref("");
 const status = ref(null);
 
 const showModalDetailsContract = ref(false);
-const showModalDetailsProcessContact = ref(false);
+const showModalDetailsProcessContactPerson = ref(false);
 const showModalDetailsRequirer = ref(false);
 
 const selectedContract = ref<DataContract | null>(null);
-const selectedProcessContact = ref<DataProcessContact | null>(null);
+const selectedProcessContactPerson = ref<DataProcessContactPerson | null>(null);
 const selectedRequirer = ref<DataRequirer | null>(null);
 
 onMounted(async () => {
@@ -153,15 +170,21 @@ const filteredContractors = computed(() => {
     const matchStatus =
       status.value === null ? true : c.is_active === status.value;
 
-    const matchSearch = [
-      c.name,
-      c.email,
-      c.phone_commercial,
-      c.phone_personal,
-      c.cnpj,
-      c.cpf,
-    ]
-      .filter(Boolean)
+    // TODOS OS CAMPOS DE PESSOA
+    const fields = [
+      c.person?.name,
+      c.person?.email,
+      c.person?.phone_commercial,
+      c.person?.phone_personal,
+      c.person?.cnpj,
+      c.person?.cpf,
+    ];
+
+    const matchSearch = fields
+      .filter(
+        (field): field is string =>
+          typeof field === "string" && field.length > 0
+      )
       .some((field) => field.toLowerCase().includes(term));
 
     return matchStatus && matchSearch;
@@ -193,11 +216,10 @@ async function openContract(contractorId: string) {
 }
 
 async function openProcessContact(contractorId: string) {
-  const processContact = await processContactStore.findByContractor(
-    contractorId
-  );
-  selectedProcessContact.value = processContact;
-  showModalDetailsProcessContact.value = true;
+  const list = await processContactPersonStore.findByContractor(contractorId);
+
+  selectedProcessContactPerson.value = list[0] ?? null; // objeto único
+  showModalDetailsProcessContactPerson.value = true;
 }
 
 async function openRequirer(contractorId: string) {
@@ -205,4 +227,14 @@ async function openRequirer(contractorId: string) {
   selectedRequirer.value = requirer;
   showModalDetailsRequirer.value = true;
 }
+
+watch(
+  () => processContactPersonStore.selectedProcessContactPerson,
+  (value) => {
+    if (value) {
+      selectedProcessContactPerson.value = value;
+    }
+  },
+  { deep: true }
+);
 </script>

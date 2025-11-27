@@ -1,12 +1,9 @@
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export class UpdateContractDto {
   @IsOptional()
-  @Transform(({ value }) => {
-    if (value instanceof Date) return value;
-    return new Date(value);
-  })
+  @Type(() => Date)
   contract_date?: Date;
 
   @IsOptional()

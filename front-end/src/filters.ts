@@ -338,6 +338,97 @@ export function formatAddress(address: any): string {
   return `${street}, nº ${number} | ${neighborhood}`;
 }
 
+/**
+ * Formata telefone fixo ou celular BR automaticamente:
+ * Fixo -> (99) 9999-9999
+ * Celular -> (99) 99999-9999
+ * Limita a 11 dígitos.
+ */
+export function formatPhoneSmart(phone: string): string {
+  if (!phone) return "";
+
+  const digits = phone.replace(/\D/g, "").slice(0, 11); // 🔥 limita
+
+  // Fixo -> 10 dígitos
+  if (digits.length <= 10) {
+    // parcial para digitação (não explode)
+    if (digits.length <= 2) return `(${digits}`;
+    if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+  }
+
+  // Celular -> 11 dígitos
+  if (digits.length === 11) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  }
+
+  return phone;
+}
+
+/** Remove tudo que não for número e limita a 11 caracteres */
+export function cleanPhoneStrict(phone: string): string {
+  return phone.replace(/\D/g, "").slice(0, 11);
+}
+
+/** CPF com máscara dinâmica — máximo 11 dígitos */
+export function formatCpfSmart(value: string): string {
+  if (!value) return "";
+  const digits = value.replace(/\D/g, "").slice(0, 11); // limite
+
+  if (digits.length <= 3) return digits;
+  if (digits.length <= 6) return `${digits.slice(0, 3)}.${digits.slice(3)}`;
+  if (digits.length <= 9)
+    return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`;
+  return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(
+    6,
+    9
+  )}-${digits.slice(9, 11)}`;
+}
+
+/** Limpa e limita CPF para até 11 números */
+export function cleanCpfStrict(value: string): string {
+  return value.replace(/\D/g, "").slice(0, 11);
+}
+
+/** CNPJ com máscara dinâmica — máximo 14 dígitos */
+export function formatCnpjSmart(value: string): string {
+  if (!value) return "";
+  const digits = value.replace(/\D/g, "").slice(0, 14);
+
+  if (digits.length <= 2) return digits;
+  if (digits.length <= 5) return `${digits.slice(0, 2)}.${digits.slice(2)}`;
+  if (digits.length <= 8)
+    return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5)}`;
+  if (digits.length <= 12)
+    return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(
+      5,
+      8
+    )}/${digits.slice(8)}`;
+  return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(
+    5,
+    8
+  )}/${digits.slice(8, 12)}-${digits.slice(12, 14)}`;
+}
+
+/** Limpa e limita CNPJ para até 14 números */
+export function cleanCnpjStrict(value: string): string {
+  return value.replace(/\D/g, "").slice(0, 14);
+}
+
+/** CEP com máscara dinâmica — máximo 8 dígitos */
+export function formatCepSmart(value: string): string {
+  if (!value) return "";
+  const digits = value.replace(/\D/g, "").slice(0, 8);
+
+  if (digits.length <= 5) return digits;
+  return `${digits.slice(0, 5)}-${digits.slice(5, 8)}`;
+}
+
+/** Limpa e limita CEP a 8 dígitos */
+export function cleanCepStrict(value: string): string {
+  return value.replace(/\D/g, "").slice(0, 8);
+}
+
 // Plugin para registrar os filtros globais no app Vue
 export function registerFilters(app: App): void {
   app.config.globalProperties.$filters = {
@@ -362,5 +453,13 @@ export function registerFilters(app: App): void {
     normalizeTimeInput: normalizeTimeInput,
     formatZipcode: formatZipcode,
     formatAddress: formatAddress,
+    formatPhoneSmart: formatPhoneSmart,
+    cleanPhoneStrict: cleanPhoneStrict,
+    formatCpfSmart: formatCpfSmart,
+    cleanCpfStrict: cleanCpfStrict,
+    formatCnpjSmart: formatCnpjSmart,
+    cleanCnpjStrict: cleanCnpjStrict,
+    formatCepSmart: formatCepSmart,
+    cleanCepStrict: cleanCepStrict,
   };
 }

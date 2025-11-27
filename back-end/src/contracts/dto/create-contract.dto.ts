@@ -1,11 +1,7 @@
-import { Transform, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import { IsDate, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateContractDto {
-  // @IsNotEmpty()
-  // @IsString()
-  // @Transform(({ value }) => new Date(value))
-  // contract_date: Date;
   @IsNotEmpty()
   @Type(() => Date)
   @IsDate()

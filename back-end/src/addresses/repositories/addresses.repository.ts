@@ -18,11 +18,7 @@ export class AddressesRepository {
     return await this.prisma.address.findMany({
       orderBy: { created_at: 'desc' },
       include: {
-        contractors_commercial: true,
-        contractors_residential: true,
-        process_commercial: true,
-        process_residential: true,
-        requirers: true,
+        person: true,
       },
     });
   }
@@ -31,11 +27,7 @@ export class AddressesRepository {
     return await this.prisma.address.findUnique({
       where: { id },
       include: {
-        contractors_commercial: true,
-        contractors_residential: true,
-        process_commercial: true,
-        process_residential: true,
-        requirers: true,
+        person: true,
       },
     });
   }

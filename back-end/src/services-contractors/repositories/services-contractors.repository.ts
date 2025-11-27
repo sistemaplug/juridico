@@ -21,6 +21,13 @@ export class ServicesContractorsRepository {
     });
   }
 
+  async findByContractor(contractorId: string) {
+    return await this.prisma.service.findFirst({
+      where: { contractor_id: contractorId },
+      include: { contractor: true, trello_links: true },
+    });
+  }
+
   async findById(id: string): Promise<ServicesContractorEntity> {
     const service = await this.prisma.service.findFirst({
       where: { id },

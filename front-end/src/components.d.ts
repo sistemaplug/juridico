@@ -15,6 +15,8 @@ declare module 'vue' {
     ContractorSearch: typeof import('./components/contractors/ContractorSearch.vue')['default']
     Header: typeof import('./components/header/Header.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    PersonActiveAndInative: typeof import('./components/person/ContractorActiveAndInative.vue')['default']
+    PersonSearch: typeof import('./components/person/ContractorSearch.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Snackbar: typeof import('./components/snackbar/index.vue')['default']

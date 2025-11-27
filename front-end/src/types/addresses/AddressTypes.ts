@@ -1,10 +1,18 @@
+export enum AddressType {
+  COMMERCIAL = "COMMERCIAL",
+  RESIDENTIAL = "RESIDENTIAL",
+  OTHER = "OTHER",
+}
+
 export interface DataAddress {
   id: string;
+  person_id: string;
+  type: AddressType;
   zipcode: string;
   street: string;
   number: string;
   neighborhood: string;
-  complement: string;
+  complement: string | null;
   city: string;
   state: string;
   created_at: string;
@@ -12,6 +20,8 @@ export interface DataAddress {
 }
 
 export interface NewDataAddress {
+  person_id: string;
+  type: AddressType;
   zipcode: string;
   street: string;
   number: string;
@@ -23,11 +33,13 @@ export interface NewDataAddress {
 
 export interface UpdateDataAddress {
   id?: string;
+  person_id?: string;
+  type?: AddressType;
   zipcode?: string;
   street?: string;
   number?: string;
   neighborhood?: string;
-  complement?: string;
+  complement?: string | null;
   city?: string;
   state?: string;
   created_at?: string;

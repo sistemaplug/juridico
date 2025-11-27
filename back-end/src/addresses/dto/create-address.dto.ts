@@ -1,6 +1,15 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { AddressType } from '@prisma/client';
 
 export class CreateAddressDto {
+  @IsNotEmpty()
+  @IsString()
+  person_id: string;
+
+  @IsNotEmpty()
+  @IsEnum(AddressType)
+  type: AddressType;
+
   @IsNotEmpty()
   @IsString()
   zipcode: string;

@@ -15,15 +15,19 @@ export class ServicesContractorsService {
     return await this.repository.findAll();
   }
 
+  async findByContractor(contractorId: string) {
+    return await this.repository.findByContractor(contractorId);
+  }
+
   async findById(id: string) {
     return await this.repository.findById(id);
   }
 
   async update(id: string, dto: UpdateServicesContractorDto) {
-    return await this.update(id, dto);
+    return await this.repository.update(id, dto);
   }
 
   async deactivate(id: string) {
-    return await this.deactivate(id);
+    return await this.repository.deactivate(id);
   }
 }

@@ -12,6 +12,7 @@ import { EncryptionService } from 'src/common/encryption/encryption.service';
     PrismaService,
     EncryptionService,
     ContractorsRepository,
+    EncryptionService,
   ],
 })
 export class ContractorsModule {}

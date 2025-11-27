@@ -1,33 +1,13 @@
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, IsBoolean } from 'class-validator';
 
 export class UpdateRequirerDto {
-  @IsOptional()
-  @IsString()
-  name?: string;
-
-  @IsOptional()
-  @IsString()
-  cpf?: string;
-
-  @IsOptional()
-  @IsString()
-  cnpj?: string;
-
-  @IsOptional()
-  @IsString()
-  email?: string;
-
-  @IsOptional()
-  @IsString()
-  phone_commercial?: string;
-
   @IsOptional()
   @IsString()
   contractor_id?: string;
 
   @IsOptional()
   @IsString()
-  address_id?: string;
+  person_id?: string;
 
   @IsOptional()
   @IsBoolean()

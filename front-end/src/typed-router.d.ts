@@ -27,9 +27,9 @@ declare module 'vue-router/auto-routes' {
     '/forms/myData/FormMyInfo': RouteRecordInfo<'/forms/myData/FormMyInfo', '/forms/myData/FormMyInfo', Record<never, never>, Record<never, never>>,
     '/forms/myData/FormMyPassword': RouteRecordInfo<'/forms/myData/FormMyPassword', '/forms/myData/FormMyPassword', Record<never, never>, Record<never, never>>,
     '/forms/myData/Index': RouteRecordInfo<'/forms/myData/Index', '/forms/myData/Index', Record<never, never>, Record<never, never>>,
-    '/process-contacts/EditProcessContact': RouteRecordInfo<'/process-contacts/EditProcessContact', '/process-contacts/EditProcessContact', Record<never, never>, Record<never, never>>,
-    '/process-contacts/ProcessContactDetails': RouteRecordInfo<'/process-contacts/ProcessContactDetails', '/process-contacts/ProcessContactDetails', Record<never, never>, Record<never, never>>,
-    '/process-contacts/ProcessContactDetailsReadonly': RouteRecordInfo<'/process-contacts/ProcessContactDetailsReadonly', '/process-contacts/ProcessContactDetailsReadonly', Record<never, never>, Record<never, never>>,
+    '/process-contacts-person/EditProcessContactPerson': RouteRecordInfo<'/process-contacts-person/EditProcessContactPerson', '/process-contacts-person/EditProcessContactPerson', Record<never, never>, Record<never, never>>,
+    '/process-contacts-person/ProcessContactPersonDetails': RouteRecordInfo<'/process-contacts-person/ProcessContactPersonDetails', '/process-contacts-person/ProcessContactPersonDetails', Record<never, never>, Record<never, never>>,
+    '/process-contacts-person/ProcessContactPersonDetailsReadonly': RouteRecordInfo<'/process-contacts-person/ProcessContactPersonDetailsReadonly', '/process-contacts-person/ProcessContactPersonDetailsReadonly', Record<never, never>, Record<never, never>>,
     '/requirers/EditRequirer': RouteRecordInfo<'/requirers/EditRequirer', '/requirers/EditRequirer', Record<never, never>, Record<never, never>>,
     '/requirers/RequirerDetails': RouteRecordInfo<'/requirers/RequirerDetails', '/requirers/RequirerDetails', Record<never, never>, Record<never, never>>,
     '/requirers/RequirerDetailsReadonly': RouteRecordInfo<'/requirers/RequirerDetailsReadonly', '/requirers/RequirerDetailsReadonly', Record<never, never>, Record<never, never>>,
@@ -82,16 +82,16 @@ declare module 'vue-router/auto-routes' {
       routes: '/forms/myData/Index'
       views: never
     }
-    'src/pages/process-contacts/EditProcessContact.vue': {
-      routes: '/process-contacts/EditProcessContact'
+    'src/pages/process-contacts-person/EditProcessContactPerson.vue': {
+      routes: '/process-contacts-person/EditProcessContactPerson'
       views: never
     }
-    'src/pages/process-contacts/ProcessContactDetails.vue': {
-      routes: '/process-contacts/ProcessContactDetails'
+    'src/pages/process-contacts-person/ProcessContactPersonDetails.vue': {
+      routes: '/process-contacts-person/ProcessContactPersonDetails'
       views: never
     }
-    'src/pages/process-contacts/ProcessContactDetailsReadonly.vue': {
-      routes: '/process-contacts/ProcessContactDetailsReadonly'
+    'src/pages/process-contacts-person/ProcessContactPersonDetailsReadonly.vue': {
+      routes: '/process-contacts-person/ProcessContactPersonDetailsReadonly'
       views: never
     }
     'src/pages/requirers/EditRequirer.vue': {

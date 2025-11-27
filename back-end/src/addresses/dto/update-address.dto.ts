@@ -1,6 +1,15 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { AddressType } from '@prisma/client';
 
 export class UpdateAddressDto {
+  @IsOptional()
+  @IsString()
+  person_id?: string;
+
+  @IsOptional()
+  @IsEnum(AddressType)
+  type?: AddressType;
+
   @IsOptional()
   @IsString()
   zipcode?: string;

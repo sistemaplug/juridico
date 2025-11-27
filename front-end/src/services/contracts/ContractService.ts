@@ -18,9 +18,9 @@ export class ContractService extends Http {
     return await this.get<DataContract[]>("");
   }
 
-  async findByContractor(contractorId: string): Promise<DataContract | null> {
+  async findByContractor(personId: string): Promise<DataContract | null> {
     return await this.get<DataContract | null>(
-      `/by-contractor/${contractorId}`
+      `/by-contractor/${personId}`
     );
   }
 

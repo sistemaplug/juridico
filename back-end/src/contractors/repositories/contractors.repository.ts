@@ -12,36 +12,32 @@ export class ContractorsRepository {
     private readonly encryption: EncryptionService,
   ) {}
 
-  private encryptSensitiveFields(dto: any) {
-    if (dto.cpf) dto.cpf = this.encryption.encrypt(dto.cpf);
-    if (dto.cnpj) dto.cnpj = this.encryption.encrypt(dto.cnpj);
-    return dto;
-  }
-
   private decryptSensitiveFields(contractor: any) {
-    if (contractor?.cpf) {
-      contractor.cpf = this.encryption.decrypt(contractor.cpf);
+    if (contractor?.person?.cpf) {
+      contractor.person.cpf = this.encryption.decrypt(contractor.person.cpf);
     }
-    if (contractor?.cnpj) {
-      contractor.cnpj = this.encryption.decrypt(contractor.cnpj);
+    if (contractor?.person?.cnpj) {
+      contractor.person.cnpj = this.encryption.decrypt(contractor.person.cnpj);
     }
     return contractor;
   }
 
   async create(dto: CreateContractorDto): Promise<ContractorEntity> {
-    const encryptedDto = this.encryptSensitiveFields(dto);
-
-    return await this.prisma.contractor.create({ data: encryptedDto });
+    return await this.prisma.contractor.create({
+      data: {
+        person_id: dto.person_id,
+      },
+    });
   }
 
   async findAll(): Promise<ContractorEntity[]> {
     const list = await this.prisma.contractor.findMany({
       include: {
-        commercial_address: true,
-        residential_address: true,
+        person: true,
         contracts: true,
-        requirers: true,
         services: true,
+        requirers: true,
+        process_contacts: true,
       },
       orderBy: { created_at: 'asc' },
     });
@@ -53,11 +49,11 @@ export class ContractorsRepository {
     const list = await this.prisma.contractor.findMany({
       where: { is_active: true },
       include: {
-        commercial_address: true,
-        residential_address: true,
+        person: true,
         contracts: true,
-        requirers: true,
         services: true,
+        requirers: true,
+        process_contacts: true,
       },
       orderBy: { created_at: 'asc' },
     });
@@ -69,11 +65,11 @@ export class ContractorsRepository {
     const list = await this.prisma.contractor.findMany({
       where: { is_active: false },
       include: {
-        commercial_address: true,
-        residential_address: true,
+        person: true,
         contracts: true,
-        requirers: true,
         services: true,
+        requirers: true,
+        process_contacts: true,
       },
       orderBy: { created_at: 'asc' },
     });
@@ -85,19 +81,19 @@ export class ContractorsRepository {
     const contractor = await this.prisma.contractor.findUnique({
       where: { id },
       include: {
-        commercial_address: true,
-        residential_address: true,
+        person: true,
         contracts: true,
-        requirers: true,
         services: true,
+        requirers: true,
+        process_contacts: true,
       },
     });
 
     if (!contractor) {
-      throw new HttpException('Conctractor not found', 404);
+      throw new HttpException('Contractor not found', 404);
     }
 
-    return this.decryptSensitiveFields(contractor);
+    return contractor;
   }
 
   async update(
@@ -106,17 +102,15 @@ export class ContractorsRepository {
   ): Promise<ContractorEntity> {
     await this.findById(id);
 
-    const encryptedDto = this.encryptSensitiveFields(dto);
-
     return await this.prisma.contractor.update({
       where: { id },
-      data: encryptedDto,
+      data: dto,
       include: {
-        commercial_address: true,
-        residential_address: true,
+        person: true,
         contracts: true,
-        requirers: true,
         services: true,
+        requirers: true,
+        process_contacts: true,
       },
     });
   }

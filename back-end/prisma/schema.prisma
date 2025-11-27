@@ -35,25 +35,36 @@ model Token {
   @@map("tokens")
 }
 
+model Person {
+id               String                 @id @default(uuid()) @db.Char(36)
+name             String
+cpf              String?                @unique
+cnpj             String?                @unique
+email            String?
+phone_commercial String?
+phone_personal   String?
+is_active        Boolean                @default(true)
+created_at       DateTime               @default(now())
+updated_at       DateTime               @default(now()) @updatedAt
+addresses        Address[]              @relation("PersonAddresses")
+contractors      Contractor[]           @relation("PersonContractor")
+process_contacts ProcessContactPerson[]
+requirers        Requirer[]
+
+  @@map("people")
+}
+
 model Contractor {
-  id                     String           @id @default(uuid()) @db.Char(36)
-  name                   String
-  cpf                    String?
-  cnpj                   String?
-  email                  String
-  phone_commercial       String
-  phone_personal         String
-  is_active              Boolean          @default(true)
-  commercial_address     Address          @relation("ContractorCommercialAddress", fields: [commercial_address_id], references: [id])
-  commercial_address_id  String           @db.Char(36)
-  residential_address    Address          @relation("ContractorResidentialAddress", fields: [residential_address_id], references: [id])
-  residential_address_id String           @db.Char(36)
-  created_at             DateTime         @default(now())
-  updated_at             DateTime         @default(now()) @updatedAt
-  contracts              Contract[]
-  requirers              Requirer[]
-  services               Service[]
-  process_contacts       ProcessContact[]
+  id               String                 @id @default(uuid()) @db.Char(36)
+  person_id        String                 @db.Char(36)
+  person           Person                 @relation("PersonContractor", fields: [person_id], references: [id], onDelete: Restrict)
+  is_active        Boolean                @default(true)
+  created_at       DateTime               @default(now())
+  updated_at       DateTime               @default(now()) @updatedAt
+  contracts        Contract[]
+  services         Service[]
+  process_contacts ProcessContactPerson[]
+  requirers        Requirer[]
 
   @@map("contractors")
 }
@@ -76,61 +87,45 @@ model Contract {
   @@map("contracts")
 }
 
-model ProcessContact {
-  id                     String     @id @default(uuid()) @db.Char(36)
-  name                   String
-  cpf                    String?
-  cnpj                   String?
-  email                  String
-  phone_commercial       String
-  phone_personal         String
-  is_active              Boolean    @default(true)
-  contractor             Contractor @relation(fields: [contractor_id], references: [id])
-  contractor_id          String     @db.Char(36)
-  commercial_address     Address    @relation("ProcessCommercialAddress", fields: [commercial_address_id], references: [id])
-  commercial_address_id  String     @db.Char(36)
-  residential_address    Address    @relation("ProcessResidentialAddress", fields: [residential_address_id], references: [id])
-  residential_address_id String     @db.Char(36)
-  created_at             DateTime   @default(now())
-  updated_at             DateTime   @default(now()) @updatedAt
+model ProcessContactPerson {
+  id            String     @id @default(uuid()) @db.Char(36)
+  person_id     String     @db.Char(36)
+  person        Person     @relation(fields: [person_id], references: [id])
+  contractor_id String     @db.Char(36)
+  contractor    Contractor @relation(fields: [contractor_id], references: [id])
+  created_at    DateTime   @default(now())
+  updated_at    DateTime   @default(now()) @updatedAt
 
-  @@map("process_contacts")
+  @@map("process_contact_person")
 }
 
 model Requirer {
-  id               String     @id @default(uuid()) @db.Char(36)
-  name             String
-  cpf              String?
-  cnpj             String?
-  email            String
-  phone_commercial String
-  is_active        Boolean    @default(true)
-  contractor       Contractor @relation(fields: [contractor_id], references: [id])
-  contractor_id    String     @db.Char(36)
-  address          Address    @relation(fields: [address_id], references: [id])
-  address_id       String     @db.Char(36)
-  created_at       DateTime   @default(now())
-  updated_at       DateTime   @default(now()) @updatedAt
+  id            String     @id @default(uuid()) @db.Char(36)
+  contractor_id String     @db.Char(36)
+  contractor    Contractor @relation(fields: [contractor_id], references: [id])
+  person_id     String     @db.Char(36)
+  person        Person     @relation(fields: [person_id], references: [id])
+  is_active     Boolean    @default(true)
+  created_at    DateTime   @default(now())
+  updated_at    DateTime   @default(now()) @updatedAt
 
   @@map("requirers")
 }
 
 model Address {
-  id                      String           @id @default(uuid()) @db.Char(36)
-  zipcode                 String
-  street                  String
-  number                  String
-  neighborhood            String
-  complement              String?
-  city                    String
-  state                   String
-  created_at              DateTime         @default(now())
-  updated_at              DateTime         @default(now()) @updatedAt
-  contractors_commercial  Contractor[]     @relation("ContractorCommercialAddress")
-  contractors_residential Contractor[]     @relation("ContractorResidentialAddress")
-  process_commercial      ProcessContact[] @relation("ProcessCommercialAddress")
-  process_residential     ProcessContact[] @relation("ProcessResidentialAddress")
-  requirers               Requirer[]
+  id           String      @id @default(uuid()) @db.Char(36)
+  person_id    String      @db.Char(36)
+  person       Person      @relation("PersonAddresses", fields: [person_id], references: [id])
+  type         AddressType
+  zipcode      String
+  street       String
+  number       String
+  neighborhood String
+  complement   String?
+  city         String
+  state        String
+  created_at   DateTime    @default(now())
+  updated_at   DateTime    @default(now()) @updatedAt
 
   @@map("addresses")
 }
@@ -165,6 +160,12 @@ enum Role {
   ADMIN
   CUSTOMER
   SUPPORT
+}
+
+enum AddressType {
+  COMMERCIAL
+  RESIDENTIAL
+  OTHER
 }
 
 enum StatusService {

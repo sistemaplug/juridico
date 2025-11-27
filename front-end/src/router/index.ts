@@ -10,7 +10,7 @@ import Login from "@/pages/forms/login/Login.vue";
 import { useAuthStore } from "@/stores/auth/User";
 import Index from "@/pages/forms/myData/Index.vue";
 import { useSnackbarStore } from "@/stores/snackbarStore";
-import ContractorHome from "@/pages/contractors/ContractorHome.vue";
+import PersonHome from "@/pages/contractors/ContractorHome.vue";
 
 const manualRoutes: Array<RouteRecordRaw> = [
   {
@@ -26,7 +26,7 @@ const manualRoutes: Array<RouteRecordRaw> = [
 
   {
     path: "/clientes",
-    component: ContractorHome,
+    component: PersonHome,
     meta: { title: "Clientes", auth: true },
   },
 ];

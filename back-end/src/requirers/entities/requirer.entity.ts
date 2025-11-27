@@ -1,15 +1,10 @@
-import { Requirer } from "@prisma/client";
+import { Requirer } from '@prisma/client';
 
 export class RequirerEntity implements Requirer {
   id: string;
-  name: string;
-  cpf: string | null;
-  cnpj: string | null;
-  email: string;
-  phone_commercial: string;
-  is_active: boolean;
   contractor_id: string;
-  address_id: string;
+  person_id: string;
+  is_active: boolean;
   created_at: Date;
   updated_at: Date;
 }

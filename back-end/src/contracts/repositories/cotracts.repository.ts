@@ -9,21 +9,38 @@ export class ContractsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(dto: CreateContractDto): Promise<ContractEntity> {
-    return await this.prisma.contract.create({ data: dto });
+    return await this.prisma.contract.create({
+      data: dto,
+      include: {
+        contractor: true,
+      },
+    });
   }
 
   async findAll(): Promise<ContractEntity[]> {
-    return await this.prisma.contract.findMany();
+    return await this.prisma.contract.findMany({
+      include: {
+        contractor: true,
+      },
+      orderBy: { created_at: 'desc' },
+    });
   }
 
-  async findByContractor(contractorId: string) {
+  async findByContractor(contractorId: string): Promise<ContractEntity | null> {
     return await this.prisma.contract.findFirst({
       where: { contractor_id: contractorId },
+      include: { contractor: true },
+      orderBy: { created_at: 'desc' },
     });
   }
 
   async findById(id: string): Promise<ContractEntity> {
-    const contract = await this.prisma.contract.findUnique({ where: { id } });
+    const contract = await this.prisma.contract.findUnique({
+      where: { id },
+      include: {
+        contractor: true,
+      },
+    });
 
     if (!contract) {
       throw new HttpException('Contract not found', 404);
@@ -38,6 +55,9 @@ export class ContractsRepository {
     return await this.prisma.contract.update({
       where: { id },
       data: dto,
+      include: {
+        contractor: true,
+      },
     });
   }
 

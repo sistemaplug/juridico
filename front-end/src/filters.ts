@@ -41,9 +41,11 @@ export function cleanCpf(cpf: string): string {
 
 // Função para formatar número de telefone
 export function formatPhone(
-  phone: string,
+  phone: string | null | undefined,
   options: { ddi?: boolean } = {}
 ): string {
+  if (!phone) return "";
+
   const cleaned = phone.replace(/\D/g, "");
   let match: RegExpMatchArray | null = null;
 
@@ -68,7 +70,7 @@ export function formatPhone(
       ? cleaned.match(/^(\d{3})(\d{5})(\d{4})$/)
       : null;
 
-  return match ? `(${match[1]}) ${match[2]}-${match[3]}` : phone;
+  return match ? `(${match[1]}) ${match[2]}-${match[3]}` : cleaned;
 }
 
 // Função para remover caracteres não numéricos de telefone

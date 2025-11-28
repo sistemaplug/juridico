@@ -1,9 +1,9 @@
 <template>
   <!-- Nome / CPF-CNPJ -->
-  <v-row>
+  <v-row class="pt-6">
     <v-col>
       <v-text-field
-        v-model="form.name"
+        v-model="form.person.name"
         label="Nome | Razão Social"
         variant="outlined"
         density="compact"
@@ -33,7 +33,7 @@
 
     <v-col>
       <v-text-field
-        v-model="form.email"
+        v-model="form.person.email"
         label="E-mail"
         variant="outlined"
         density="compact"
@@ -41,11 +41,11 @@
     </v-col>
   </v-row>
 
-  <v-divider class="my-4" />
+  <v-divider class="mb-4" />
 
   <!-- Endereço Comercial -->
-  <div class="pb-2">
-    <v-card-title>Endereço Comercial</v-card-title>
+  <div class="pb-4">
+    <v-card-title>Endereço Comercial:</v-card-title>
   </div>
 
   <v-row>
@@ -60,7 +60,7 @@
 
     <v-col>
       <v-text-field
-        v-model="form.address.street"
+        v-model="commercial.street"
         label="Rua"
         variant="outlined"
         density="compact"
@@ -71,7 +71,7 @@
   <v-row>
     <v-col>
       <v-text-field
-        v-model="form.address.number"
+        v-model="commercial.number"
         label="Número"
         variant="outlined"
         density="compact"
@@ -80,7 +80,7 @@
 
     <v-col>
       <v-text-field
-        v-model="form.address.neighborhood"
+        v-model="commercial.neighborhood"
         label="Bairro"
         variant="outlined"
         density="compact"
@@ -91,7 +91,7 @@
   <v-row>
     <v-col>
       <v-text-field
-        v-model="form.address.complement"
+        v-model="commercial.complement"
         label="Complemento"
         variant="outlined"
         density="compact"
@@ -108,141 +108,163 @@
     </v-col>
   </v-row>
 
-  <v-btn color="primary" class="mt-4" @click="updateData">
-    <v-icon start>mdi-content-save</v-icon>
-    Salvar Registro
-  </v-btn>
+  <!-- Botões -->
+  <div class="d-flex justify-end ga-4">
+    <v-btn color="error" @click="emit('close')">
+      <v-icon start>mdi-arrow-left</v-icon>
+      Cancelar
+    </v-btn>
+
+    <v-btn color="primary" @click="updateData">
+      <v-icon start>mdi-content-save</v-icon>
+      Salvar Registro
+    </v-btn>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
-import { useRequirerStore } from "@/stores/requirers/RequirerStore";
+import type { DataRequirer } from "@/types/requirers/RequirerTypes";
+
 import { useAddressStore } from "@/stores/addresses/AddressStore";
+import { usePersonStore } from "@/stores/persons/PersonStore";
 import { useSnackbarStore } from "@/stores/snackbarStore";
 
 import {
-  formatCpf,
-  formatCnpj,
-  cleanPhone,
-  formatPhone,
-  formatZipcode,
+  cleanCpfStrict,
+  cleanCnpjStrict,
+  formatCpfSmart,
+  formatCnpjSmart,
+  formatPhoneSmart,
+  cleanPhoneStrict,
+  cleanCepStrict,
+  formatCepSmart,
 } from "@/filters";
 
-import { searchZipCode } from "@/utils/searchZipCode";
 import { STATES } from "@/assets/states";
-import type { DataRequirer } from "@/types/requirers/RequirerTypes";
+import { searchZipCode } from "@/utils/searchZipCode";
+import { useRequirerStore } from "@/stores/requirers/RequirerStore";
+import { useContractorStore } from "@/stores/contractors/ContractorStore";
 
-const props = defineProps<{ requirer: DataRequirer & { address: any } }>();
+const props = defineProps<{ requirer: DataRequirer }>();
 const emit = defineEmits(["close"]);
 
-const requirerStore = useRequirerStore();
+const personStore = usePersonStore();
 const addressStore = useAddressStore();
+const requirerStore = useRequirerStore();
+const contractorStore = useContractorStore();
 const snackbarStore = useSnackbarStore();
 
-// Cópia local DO REQUERER
+// Cópia local editável (não muta a prop original)
 const form = ref(JSON.parse(JSON.stringify(props.requirer)));
+
+/* Endereço Comercial ÚNICO */
+const commercial = ref(
+  form.value.person.addresses.find((a: any) => a.type === "COMMERCIAL")
+);
 
 // CPF / CNPJ MASK DINÂMICA
 const documentInput = computed({
   get() {
-    if (form.value.cpf) return formatCpf(form.value.cpf);
-    if (form.value.cnpj) return formatCnpj(form.value.cnpj);
+    const p = form.value.person;
+    if (p.cpf) return formatCpfSmart(p.cpf);
+    if (p.cnpj) return formatCnpjSmart(p.cnpj);
     return "";
   },
-  set(value: string) {
-    const digits = value.replace(/\D/g, "");
-
+  set(v: string) {
+    const digits = v.replace(/\D/g, "");
     if (digits.length <= 11) {
-      form.value.cpf = digits;
-      form.value.cnpj = "";
+      form.value.person.cpf = cleanCpfStrict(v);
+      form.value.person.cnpj = null;
     } else {
-      form.value.cpf = "";
-      form.value.cnpj = digits;
+      form.value.person.cpf = null;
+      form.value.person.cnpj = cleanCnpjStrict(v);
     }
   },
 });
 
-// PHONE MASKS
+// PHONE MASK
 const phoneCommercialInput = computed({
-  get: () => formatPhone(form.value.phone_commercial ?? ""),
-  set: (value: string) =>
-    (form.value.phone_commercial = cleanPhone(value || "")),
+  get: () => formatPhoneSmart(form.value.person.phone_commercial ?? ""),
+  set: (v) => (form.value.person.phone_commercial = cleanPhoneStrict(v)),
 });
 
 // CEP MASK DINÂMICA COMERCIAL
 const commercialZip = computed({
-  get() {
-    return formatZipcode(form.value.address.zipcode);
-  },
-  set(value: string) {
-    form.value.address.zipcode = value.replace(/\D/g, "").slice(0, 8);
-  },
+  get: () => formatCepSmart(commercial.value.zipcode),
+  set: (v) => (commercial.value.zipcode = cleanCepStrict(v)),
 });
 
 // CEP AUTO-COMPLETE — Comercial
 watch(
-  () => form.value.address.zipcode,
+  () => commercial.value.zipcode,
   async (value) => {
-    const cep = value.replace(/\D/g, "");
+    const cep = cleanCepStrict(value);
     if (cep.length !== 8) return;
 
     const res = await searchZipCode(cep);
-
     if (res) {
-      form.value.address.street = res.logradouro;
-      form.value.address.neighborhood = res.bairro;
-      form.value.address.city = res.cidade;
-      form.value.address.state = res.estado;
-      form.value.address.complement = res.complemento ?? "";
+      commercial.value.street = res.logradouro;
+      commercial.value.neighborhood = res.bairro;
+      commercial.value.city = res.cidade;
+      commercial.value.state = res.estado;
+      commercial.value.complement = res.complemento ?? "";
     }
   }
 );
 
-// Cidade + Estado formatado
+// Formatação de Cidade e Estado
 const cityStateCommercial = computed({
   get() {
-    return `${form.value.address.city}, ${
-      STATES[form.value.address.state] || form.value.address.state
-    }`;
+    const c = commercial.value;
+    return `${c.city}, ${STATES[c.state] || c.state}`;
   },
-  set(value: string) {
-    const [city, uf] = value.split(",").map((v) => v.trim());
-    if (city) form.value.address.city = city;
-    if (uf) form.value.address.state = uf;
+  set(v: string) {
+    const [city, uf] = v.split(",").map((s) => s.trim());
+    if (city) commercial.value.city = city;
+    if (uf) commercial.value.state = uf;
   },
 });
 
 async function updateData() {
   try {
-    // Atualiza o requirer
-    const requirerPayload = {
-      name: form.value.name,
-      cpf: form.value.cpf || null,
-      cnpj: form.value.cnpj || null,
-      email: form.value.email,
-      phone_commercial: cleanPhone(form.value.phone_commercial),
-    };
+    // 1) Atualiza PERSON
+    await personStore.update(form.value.person.id, {
+      name: form.value.person.name,
+      cpf: form.value.person.cpf || null,
+      cnpj: form.value.person.cnpj || null,
+      email: form.value.person.email,
+      phone_commercial: cleanPhoneStrict(form.value.person.phone_commercial),
+    });
 
-    await requirerStore.update(form.value.id, requirerPayload);
+    // 2) Atualiza endereço COMERCIAL
+    await addressStore.update(commercial.value.id, {
+      zipcode: commercial.value.zipcode.replace(/\D/g, ""),
+      street: commercial.value.street,
+      number: commercial.value.number,
+      neighborhood: commercial.value.neighborhood,
+      complement: commercial.value.complement,
+      city: commercial.value.city,
+      state: commercial.value.state,
+    });
 
-    // Atualiza o endereço
-    const addressPayload = {
-      zipcode: form.value.address.zipcode.replace(/\D/g, ""),
-      street: form.value.address.street,
-      number: form.value.address.number,
-      neighborhood: form.value.address.neighborhood,
-      complement: form.value.address.complement,
-      city: form.value.address.city,
-      state: form.value.address.state,
-    };
+    // 3) Atualizar o Requirer no backend (person_id + contractor_id)
+    await requirerStore.update(form.value.id, {
+      person_id: form.value.person.id,
+      contractor_id: form.value.contractor_id,
+    });
 
-    await addressStore.update(form.value.address.id, addressPayload);
+    // 4) FORÇA RECARREGAMENTO DO REQUERENTE ATUALIZADO
+    const updated = await requirerStore.findById(form.value.id);
 
+    // Define como selecionado novamente para refletir no modal pai
+    requirerStore.selectedRequirer = updated;
+    await contractorStore.findAll();
     snackbarStore.showSnackbar("Registro atualizado!", "success");
+
     emit("close");
-  } catch (err) {
-    console.error(err);
-    snackbarStore.showSnackbar("Erro ao atualizar registro!", "error");
+  } catch (error) {
+    snackbarStore.showSnackbar("Erro ao atualizar o requerente!", "error");
   }
 }
 </script>

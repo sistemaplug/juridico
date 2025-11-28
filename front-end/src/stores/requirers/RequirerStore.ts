@@ -8,7 +8,7 @@ import type {
 } from "@/types/requirers/RequirerTypes";
 
 export const useRequirerStore = defineStore("requirer", () => {
-  const requirer = ref<DataRequirer[]>([]);
+  const requirers = ref<DataRequirer[]>([]);
   const selectedRequirer = ref<DataRequirer | null>(null);
   const loading = ref(false);
 
@@ -24,8 +24,10 @@ export const useRequirerStore = defineStore("requirer", () => {
   async function findAll() {
     loading.value = true;
     try {
-      requirer.value = await API.requirerService.findAll();
-      return requirer.value;
+      const result = await API.requirerService.findAll();
+      requirers.value = result;
+      selectedRequirer.value = result[0] ?? null;
+      return result;
     } finally {
       loading.value = false;
     }
@@ -34,9 +36,9 @@ export const useRequirerStore = defineStore("requirer", () => {
   async function findById(id: string) {
     loading.value = true;
     try {
-      const requirer = await API.requirerService.findById(id);
-      selectedRequirer.value = requirer;
-      return requirer;
+      const result = await API.requirerService.findById(id);
+      selectedRequirer.value = result;
+      return result;
     } finally {
       loading.value = false;
     }
@@ -45,9 +47,13 @@ export const useRequirerStore = defineStore("requirer", () => {
   async function findByContractor(contractorId: string) {
     loading.value = true;
     try {
-      const requirer = await API.requirerService.findByContractor(contractorId);
-      selectedRequirer.value = requirer;
-      return requirer;
+      const result = await API.requirerService.findByContractor(contractorId);
+
+      requirers.value = result;
+
+      selectedRequirer.value = result[0] ?? null;
+
+      return result;
     } finally {
       loading.value = false;
     }
@@ -72,7 +78,7 @@ export const useRequirerStore = defineStore("requirer", () => {
   }
 
   return {
-    requirer,
+    requirers,
     selectedRequirer,
     loading,
     create,

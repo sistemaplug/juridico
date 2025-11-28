@@ -1,42 +1,23 @@
-import type {
-  DataAddress,
-  NewDataAddress,
-  UpdateDataAddress,
-} from "../addresses/AddressTypes";
+import type { DataContractor } from "../contractors/ContractorTypes";
+import type { DataPerson } from "../persons/PersonTypes";
 
 export interface DataRequirer {
   id: string;
-  name: string;
-  cpf: string | null;
-  cnpj: string | null;
-  email: string;
-  phone_commercial: string;
-  is_active: boolean;
+  person_id: string;
+  person: DataPerson;
   contractor_id: string;
-  address: DataAddress;
+  contractor: DataContractor;
+  is_active: boolean;
   created_at: string;
   updated_at: string;
 }
-
 export interface NewDataRequirer {
-  name: string;
-  cpf?: string | null;
-  cnpj?: string | null;
-  email: string;
-  phone_commercial: string;
+  person_id: string;
   contractor_id: string;
-  address: NewDataAddress;
 }
 
 export interface UpdateDataRequirer {
   id?: string;
-  name?: string;
-  cpf?: string | null;
-  cnpj?: string | null;
-  email?: string;
-  phone_commercial?: string;
-  address?: UpdateDataAddress;
-  is_active?: boolean;
-  created_at?: string;
-  updated_at?: string;
+  person_id?: string;
+  contractor_id?: string;
 }

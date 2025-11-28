@@ -5,7 +5,7 @@ import type {
   DataService,
   NewDataService,
   UpdateDataService,
-} from "@/types/services-contractors/ServicesTypes";
+} from "@/types/services-contractors/ServiceContractorTypes";
 
 export const useServiceContractorStore = defineStore(
   "serviceContractor",
@@ -43,15 +43,17 @@ export const useServiceContractorStore = defineStore(
         loading.value = false;
       }
     }
-
+    
     async function findByContractor(contractorId: string) {
       loading.value = true;
       try {
-        const serviceContractor = await API.service.findByContractor(
-          contractorId
-        );
-        selectedServiceContractor.value = serviceContractor;
-        return serviceContractor;
+        const result = await API.service.findByContractor(contractorId);
+
+        serviceContractor.value = result;
+
+        selectedServiceContractor.value = result[0] ?? null;
+
+        return result;
       } finally {
         loading.value = false;
       }

@@ -123,6 +123,14 @@
         @close="showModalDetailsRequirer = false"
       />
     </v-dialog>
+
+    <!-- MODAL REQUERENTE -->
+    <v-dialog v-model="showModalDetailsService" max-width="1200">
+      <ServiceContractorDetails
+        :service="selectedService"
+        @close="showModalDetailsService = false"
+      />
+    </v-dialog>
   </v-container>
 </template>
 
@@ -142,11 +150,15 @@ import ProcessContactPersonDetails from "../process-contacts-person/ProcessConta
 import RequirerDetails from "../requirers/RequirerDetails.vue";
 import type { DataRequirer } from "@/types/requirers/RequirerTypes";
 import { useRequirerStore } from "@/stores/requirers/RequirerStore";
+import ServiceContractorDetails from "../services-contractors/ServiceContractorDetails.vue";
+import type { DataService } from "@/types/services-contractors/ServiceContractorTypes";
+import { useServiceContractorStore } from "@/stores/services-contractors/ServiceContractorStore";
 
 const contractorStore = useContractorStore();
 const contractStore = useContractStore();
 const processContactPersonStore = useProcessContactPersonStore();
 const requirerStore = useRequirerStore();
+const serviceStore = useServiceContractorStore();
 
 const search = ref("");
 const status = ref(null);
@@ -154,10 +166,12 @@ const status = ref(null);
 const showModalDetailsContract = ref(false);
 const showModalDetailsProcessContactPerson = ref(false);
 const showModalDetailsRequirer = ref(false);
+const showModalDetailsService = ref(false);
 
 const selectedContract = ref<DataContract | null>(null);
 const selectedProcessContactPerson = ref<DataProcessContactPerson | null>(null);
 const selectedRequirer = ref<DataRequirer | null>(null);
+const selectedService = ref<DataService | null>(null);
 
 onMounted(async () => {
   await contractorStore.findAll();
@@ -206,6 +220,8 @@ async function handleActionClick(label: string, contractor: DataContractor) {
     await openProcessContact(contractor.id);
   } else if (label === "Requerente") {
     await openRequirer(contractor.id);
+  } else if (label === "Serviço") {
+    await openService(contractor.id);
   }
 }
 
@@ -224,8 +240,14 @@ async function openProcessContact(contractorId: string) {
 
 async function openRequirer(contractorId: string) {
   const requirer = await requirerStore.findByContractor(contractorId);
-  selectedRequirer.value = requirer;
+  selectedRequirer.value = requirer[0] ?? null;
   showModalDetailsRequirer.value = true;
+}
+
+async function openService(contractorId: string) {
+  const service = await serviceStore.findByContractor(contractorId);
+  selectedService.value = service[0] ?? null;
+  showModalDetailsService.value = true;
 }
 
 watch(

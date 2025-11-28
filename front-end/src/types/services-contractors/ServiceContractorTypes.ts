@@ -1,3 +1,4 @@
+import type { DataContractor } from "../contractors/ContractorTypes";
 import type {
   DataTrelloLink,
   NewDataTrelloLink,
@@ -17,6 +18,7 @@ export interface DataService {
   status: StatusService;
   is_active: boolean;
   contractor_id: string;
+  contractor: DataContractor;
   created_at: string;
   updated_at: string;
   trello_links: DataTrelloLink[];
@@ -26,7 +28,6 @@ export interface NewDataService {
   type: string;
   status: StatusService;
   contractor_id: string;
-  trello_links: NewDataTrelloLink[];
 }
 
 export interface UpdateDataService {
@@ -37,5 +38,4 @@ export interface UpdateDataService {
   contractor_id?: string;
   created_at?: string;
   updated_at?: string;
-  trello_links?: UpdateDataTrelloLink[];
 }

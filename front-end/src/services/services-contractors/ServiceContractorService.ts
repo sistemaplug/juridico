@@ -2,7 +2,7 @@ import type {
   DataService,
   NewDataService,
   UpdateDataService,
-} from "@/types/services-contractors/ServicesTypes";
+} from "@/types/services-contractors/ServiceContractorTypes";
 import Http from "../Http";
 
 export class Service extends Http {
@@ -18,8 +18,8 @@ export class Service extends Http {
     return await this.get<DataService[]>("");
   }
 
-  async findByContractor(contractorId: string): Promise<DataService> {
-    return await this.get<DataService>(`/by-contractor/${contractorId}`);
+  async findByContractor(contractorId: string): Promise<DataService[]> {
+    return await this.get<DataService[]>(`/by-contractor/${contractorId}`);
   }
 
   async findById(id: string): Promise<DataService> {

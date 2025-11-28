@@ -22,7 +22,7 @@ export class ServicesContractorsRepository {
   }
 
   async findByContractor(contractorId: string) {
-    return await this.prisma.service.findFirst({
+    return await this.prisma.service.findMany({
       where: { contractor_id: contractorId },
       include: { contractor: true, trello_links: true },
     });

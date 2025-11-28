@@ -6,7 +6,7 @@ import { PasswordService } from "../PasswordService";
 import { PersonService } from "../persons/PersonService";
 import { ProcessContactPersonService } from "../process-contacts-person/ProcessContactPersonService";
 import { RequiererService } from "../requirers/RequiererService";
-import { Service } from "../services-contractors/ServiceContractor";
+import { Service } from "../services-contractors/ServiceContractorService";
 import UploadService from "../UploadService";
 
 export class API {

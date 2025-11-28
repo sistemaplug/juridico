@@ -33,6 +33,9 @@ declare module 'vue-router/auto-routes' {
     '/requirers/EditRequirer': RouteRecordInfo<'/requirers/EditRequirer', '/requirers/EditRequirer', Record<never, never>, Record<never, never>>,
     '/requirers/RequirerDetails': RouteRecordInfo<'/requirers/RequirerDetails', '/requirers/RequirerDetails', Record<never, never>, Record<never, never>>,
     '/requirers/RequirerDetailsReadonly': RouteRecordInfo<'/requirers/RequirerDetailsReadonly', '/requirers/RequirerDetailsReadonly', Record<never, never>, Record<never, never>>,
+    '/services-contractors/EditServiceContractor': RouteRecordInfo<'/services-contractors/EditServiceContractor', '/services-contractors/EditServiceContractor', Record<never, never>, Record<never, never>>,
+    '/services-contractors/ServiceContractorDetails': RouteRecordInfo<'/services-contractors/ServiceContractorDetails', '/services-contractors/ServiceContractorDetails', Record<never, never>, Record<never, never>>,
+    '/services-contractors/ServiceContractorDetailsReadonly': RouteRecordInfo<'/services-contractors/ServiceContractorDetailsReadonly', '/services-contractors/ServiceContractorDetailsReadonly', Record<never, never>, Record<never, never>>,
   }
 
   /**
@@ -104,6 +107,18 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/requirers/RequirerDetailsReadonly.vue': {
       routes: '/requirers/RequirerDetailsReadonly'
+      views: never
+    }
+    'src/pages/services-contractors/EditServiceContractor.vue': {
+      routes: '/services-contractors/EditServiceContractor'
+      views: never
+    }
+    'src/pages/services-contractors/ServiceContractorDetails.vue': {
+      routes: '/services-contractors/ServiceContractorDetails'
+      views: never
+    }
+    'src/pages/services-contractors/ServiceContractorDetailsReadonly.vue': {
+      routes: '/services-contractors/ServiceContractorDetailsReadonly'
       views: never
     }
   }

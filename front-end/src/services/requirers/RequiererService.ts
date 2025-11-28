@@ -18,8 +18,8 @@ export class RequiererService extends Http {
     return await this.get<DataRequirer[]>("");
   }
 
-  async findByContractor(contractorId: string): Promise<DataRequirer> {
-    return await this.get<DataRequirer>(`/by-contractor/${contractorId}`);
+  async findByContractor(contractorId: string): Promise<DataRequirer[]> {
+    return await this.get<DataRequirer[]>(`/by-contractor/${contractorId}`);
   }
 
   async findById(id: string): Promise<DataRequirer> {

@@ -22,4 +22,8 @@ export class TrelloLinksService {
   async update(id: string, dto: UpdateTrelloLinkDto) {
     return await this.repository.update(id, dto);
   }
+
+  async remove(id: string) {
+    return await this.repository.remove(id);
+  }
 }

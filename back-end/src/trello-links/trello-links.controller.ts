@@ -41,8 +41,8 @@ export class TrelloLinksController {
     return await this.service.update(id, updateTrelloLinkDto);
   }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.trelloLinksService.remove(+id);
-  // }
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.service.remove(id);
+  }
 }

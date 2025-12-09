@@ -13,6 +13,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     ContractorActiveAndInative: typeof import('./components/contractors/ContractorActiveAndInative.vue')['default']
     ContractorSearch: typeof import('./components/contractors/ContractorSearch.vue')['default']
+    DeleteTrelloLinkModal: typeof import('./components/modals/DeleteTrelloLinkModal.vue')['default']
     Header: typeof import('./components/header/Header.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     PersonActiveAndInative: typeof import('./components/person/ContractorActiveAndInative.vue')['default']

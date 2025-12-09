@@ -14,9 +14,6 @@ export interface NewDataTrelloLink {
 }
 
 export interface UpdateDataTrelloLink {
-  id?: string;
   url?: string;
   observation?: string;
-  created_at?: string;
-  updated_at?: string;
 }

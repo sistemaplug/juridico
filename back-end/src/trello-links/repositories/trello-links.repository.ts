@@ -44,4 +44,10 @@ export class TrelloLinksRepository {
       include: { service: true },
     });
   }
+
+  async remove(id: string): Promise<TrelloLinkEntity> {
+    await this.findById(id);
+
+    return await this.prisma.trelloLink.delete({ where: { id } });
+  }
 }

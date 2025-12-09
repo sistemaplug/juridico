@@ -1,9 +1,5 @@
 import type { DataContractor } from "../contractors/ContractorTypes";
-import type {
-  DataTrelloLink,
-  NewDataTrelloLink,
-  UpdateDataTrelloLink,
-} from "../trello-links/TrelloLinkTypes";
+import type { DataTrelloLink } from "../trello-links/TrelloLinkTypes";
 
 export enum StatusService {
   PENDING = "PENDING",
